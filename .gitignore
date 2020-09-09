@@ -1,0 +1,7 @@
+__pycache__
+.vscode
+env
+dist
+build
+.mypy_cache
+kraky.egg-info
