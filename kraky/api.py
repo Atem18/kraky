@@ -91,7 +91,7 @@ class KrakyApiClient:
     async def get_ohlc_data(self, data):
         return await self.public_request(endpoint="OHLC", data=data)
 
-    async def get_asset_pairs(self, data):
+    async def get_asset_pairs(self, data=None):
         return await self.public_request(endpoint="AssetPairs", data=data)
 
     async def get_last_price(self, data):
