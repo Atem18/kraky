@@ -88,12 +88,17 @@ class KrakyApiClient:
     async def get_recent_trades(self, data):
         return await self.public_request(endpoint="Trades", data=data)
 
-    async def get_ohlc_data(self, data):
+    async def get_ohlc_data(self, pair: str, interval: int, since=None):
+        data = {
+            "pair": pair,
+            "interval": interval,
+            "since": since
+        }
         return await self.public_request(endpoint="OHLC", data=data)
 
     async def get_asset_pairs(self, data=None):
         return await self.public_request(endpoint="AssetPairs", data=data)
 
-    async def get_last_price(self, data):
-        ohlc = await self.get_ohlc_data(data)
+    async def get_last_price(self, pair: str):
+        ohlc = await self.get_ohlc_data(pair, interval=1)
         return float(list(ohlc.values())[0][-1][4])
