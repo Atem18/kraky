@@ -1,3 +1,4 @@
-httpx
-pytest-asyncio
-websockets
+httpx==0.14.3
+pytest==6.0.2
+pytest-asyncio==0.14.0
+websockets==8.1

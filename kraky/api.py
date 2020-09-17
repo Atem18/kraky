@@ -4,6 +4,7 @@ import hashlib
 import hmac
 import urllib
 import time
+
 import httpx
 
 from .log import get_module_logger
@@ -14,6 +15,7 @@ class KrakyApiError(Exception):
 
 
 class KrakyApiClient:
+    """Kraken API client implementation"""
     def __init__(self, api_key="", secret=""):
         self.base_url = "https://api.kraken.com"
         self.api_key = api_key
@@ -50,9 +52,7 @@ class KrakyApiClient:
         post_data = urllib.parse.urlencode(data)
         encoded = (str(data["nonce"]) + post_data).encode()
         message = api_path.encode() + hashlib.sha256(encoded).digest()
-        signature = hmac.new(
-            base64.b64decode(self.secret), message, hashlib.sha512
-        )
+        signature = hmac.new(base64.b64decode(self.secret), message, hashlib.sha512)
         sig_digest = base64.b64encode(signature.digest())
 
         return sig_digest.decode()
@@ -78,9 +78,7 @@ class KrakyApiClient:
         return await self.private_request(endpoint="OpenOrders")
 
     async def cancel_open_order(self, txid):
-        return await self.private_request(
-            endpoint="CancelOrder", data={"txid": txid}
-        )
+        return await self.private_request(endpoint="CancelOrder", data={"txid": txid})
 
     async def get_trades_history(self):
         return await self.private_request(endpoint="TradesHistory")
@@ -89,11 +87,7 @@ class KrakyApiClient:
         return await self.public_request(endpoint="Trades", data=data)
 
     async def get_ohlc_data(self, pair: str, interval: int, since=None):
-        data = {
-            "pair": pair,
-            "interval": interval,
-            "since": since
-        }
+        data = {"pair": pair, "interval": interval, "since": since}
         return await self.public_request(endpoint="OHLC", data=data)
 
     async def get_asset_pairs(self, data=None):
