@@ -1,6 +1,7 @@
 """Kraky websocket module"""
 import asyncio
 import json
+import socket
 
 import websockets
 
@@ -27,15 +28,30 @@ class KrakyWsClient:
             ws_url = "wss://beta-ws.kraken.com"
         elif self.connection_env == "beta-auth":
             ws_url = "wss://beta-ws-auth.kraken.com"
-        async with websockets.connect(ws_url) as websocket:
-            self.connections[connection_name] = websocket
-            async for msg in websocket:
-                if "errorMessage" in msg:
-                    error = json.loads(msg)
-                    self.logger.error(error["errorMessage"])
+        websocket = await websockets.connect(ws_url)
+        self.connections[connection_name] = websocket
+        while True:
+            try:
+                if not websocket.open:
+                    websocket = await websockets.connect(ws_url)
+                    self.connections[connection_name] = websocket
                 else:
-                    data = json.loads(msg)
-                    await handler(data)
+                    message = await websocket.recv()
+                    if "errorMessage" in message:
+                        error = json.loads(message)
+                        self.logger.error(error["errorMessage"])
+                    else:
+                        data = json.loads(message)
+                        await handler(data)
+            except socket.gaierror:
+                self.logger.error("Connection to Kraken WS closed, reconnecting...")
+                continue
+            except websockets.exceptions.ConnectionClosedError:
+                self.logger.error("Connection to Kraken WS closed, reconnecting...")
+                continue
+            except websockets.exceptions.ConnectionClosedOK:
+                self.logger.error("Connection to Kraken WS closed, reconnecting...")
+                continue
 
     async def disconnect(self, connection_name="main"):
         if self.connections[connection_name] is not None:
@@ -54,10 +70,7 @@ class KrakyWsClient:
         }
         if pairs:
             payload["pair"] = pairs
-        try:
-            await websocket.send(json.dumps(payload))
-        except websockets.exceptions.ConnectionClosedError as err:
-            self.logger.exception(str(err))
+        await websocket.send(json.dumps(payload))
 
     async def subscribe(self, subscription, pairs=None, connection_name="main"):
         await self._sub_unsub("subscribe", subscription, pairs, connection_name)

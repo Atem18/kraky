@@ -80,17 +80,20 @@ class KrakyApiClient:
     async def cancel_open_order(self, txid):
         return await self.private_request(endpoint="CancelOrder", data={"txid": txid})
 
-    async def get_trades_history(self):
-        return await self.private_request(endpoint="TradesHistory")
+    async def get_trades_history(self, trade_type=None, trades=None, start=None, end=None, ofs=None):
+        data = {"type": trade_type, "trades": trades, "start": start, "end": end, "ofs": ofs}
+        return await self.private_request(endpoint="TradesHistory", data=data)
 
-    async def get_recent_trades(self, data):
+    async def get_recent_trades(self, pair: str, since=None):
+        data = {"pair": pair, "since": since}
         return await self.public_request(endpoint="Trades", data=data)
 
     async def get_ohlc_data(self, pair: str, interval: int, since=None):
         data = {"pair": pair, "interval": interval, "since": since}
         return await self.public_request(endpoint="OHLC", data=data)
 
-    async def get_asset_pairs(self, data=None):
+    async def get_asset_pairs(self, info=None, pair=None):
+        data = {"info": info, "pair": pair}
         return await self.public_request(endpoint="AssetPairs", data=data)
 
     async def get_last_price(self, pair: str):
