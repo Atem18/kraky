@@ -14,6 +14,7 @@ class KrakyWsError(Exception):
 
 class KrakyWsClient:
     """Kraken Websocket client implementation"""
+
     def __init__(self, connection_env="production"):
         self.connection_env = connection_env
         self.connections = {}
