@@ -16,6 +16,7 @@ class KrakyApiError(Exception):
 
 class KrakyApiClient:
     """Kraken API client implementation"""
+
     def __init__(self, api_key="", secret=""):
         self.base_url = "https://api.kraken.com"
         self.api_key = api_key
@@ -80,20 +81,38 @@ class KrakyApiClient:
     async def cancel_open_order(self, txid):
         return await self.private_request(endpoint="CancelOrder", data={"txid": txid})
 
-    async def get_trades_history(self, trade_type=None, trades=None, start=None, end=None, ofs=None):
-        data = {"type": trade_type, "trades": trades, "start": start, "end": end, "ofs": ofs}
+    async def get_trades_history(
+        self, trade_type=None, trades=None, start=None, end=None, ofs=None
+    ):
+        data = {
+            arg: value
+            for arg, value in locals().items()
+            if arg != "self" and value is not None
+        }
         return await self.private_request(endpoint="TradesHistory", data=data)
 
     async def get_recent_trades(self, pair: str, since=None):
-        data = {"pair": pair, "since": since}
+        data = {
+            arg: value
+            for arg, value in locals().items()
+            if arg != "self" and value is not None
+        }
         return await self.public_request(endpoint="Trades", data=data)
 
     async def get_ohlc_data(self, pair: str, interval: int, since=None):
-        data = {"pair": pair, "interval": interval, "since": since}
+        data = {
+            arg: value
+            for arg, value in locals().items()
+            if arg != "self" and value is not None
+        }
         return await self.public_request(endpoint="OHLC", data=data)
 
     async def get_asset_pairs(self, info=None, pair=None):
-        data = {"info": info, "pair": pair}
+        data = {
+            arg: value
+            for arg, value in locals().items()
+            if arg != "self" and value is not None
+        }
         return await self.public_request(endpoint="AssetPairs", data=data)
 
     async def get_last_price(self, pair: str):

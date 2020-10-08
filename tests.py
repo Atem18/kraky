@@ -19,8 +19,8 @@ class TestKrakyApiClient:
     async def test_get_ohlc_data(self):
         result = await kraky_api_client.get_ohlc_data("xbtusd", 1)
         assert "last" in result
-
+    
     @pytest.mark.asyncio
-    async def test_get_recent_trades(self):
-        result = await kraky_api_client.get_recent_trades("xbtusd")
-        assert "last" in result
+    async def test_get_asset_pairs(self):
+        result = await kraky_api_client.get_asset_pairs(pair="xbtusd")
+        assert "XXBTZUSD" in result
