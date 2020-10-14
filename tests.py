@@ -21,6 +21,6 @@ class TestKrakyApiClient:
         assert "last" in result
     
     @pytest.mark.asyncio
-    async def test_get_asset_pairs(self):
-        result = await kraky_api_client.get_asset_pairs(pair="xbtusd")
+    async def test_get_tradable_asset_pairs(self):
+        result = await kraky_api_client.get_tradable_asset_pairs(pair="xbtusd")
         assert "XXBTZUSD" in result
