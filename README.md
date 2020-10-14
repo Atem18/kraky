@@ -10,28 +10,28 @@ Python asyncio client for Kraken API REST and Kraken Websockets API using httpx 
 
     from kraky import KrakyApiClient
 
-    async def get_token():
+    async def get_ws_token():
         kraken_api_key = ""
         kraken_secret = ""
         kraky_api_client = KrakyApiClient(
             api_key=kraken_api_key, secret=kraken_secret
         )
 
-        ws_token = await self.kraky_api_client.get_ws_token()
+        ws_token = await self.kraky_api_client.get_web_sockets_token()
         return ws_token
 
 ### Websocket
 
     from kraky import KrakyApiClient, KrakyWsClient
 
-    async def get_token():
+    async def get_ws_token():
         kraken_api_key = ""
         kraken_secret = ""
         kraky_api_client = KrakyApiClient(
             api_key=kraken_api_key, secret=kraken_secret
         )
 
-        ws_token = await self.kraky_api_client.get_ws_token()
+        ws_token = await self.kraky_api_client.get_web_sockets_token()
         return ws_token
 
     async def public_handler(self, response):
