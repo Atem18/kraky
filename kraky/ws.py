@@ -64,13 +64,13 @@ class KrakyWsClient:
         self,
         sub_type: str,
         subscription: str,
-        pairs: str = None,
+        pairs: list = None,
         connection_name: str = "main",
     ) -> None:
         while connection_name not in self.connections:
             await asyncio.sleep(0.1)
         websocket = self.connections[connection_name]
-        payload = {
+        payload: dict = {
             "event": sub_type,
             "subscription": subscription,
         }
@@ -79,12 +79,12 @@ class KrakyWsClient:
         await websocket.send(json.dumps(payload))
 
     async def subscribe(
-        self, subscription: str, pairs: str = None, connection_name: str = "main"
+        self, subscription: str, pairs: list = None, connection_name: str = "main"
     ) -> None:
         await self._sub_unsub("subscribe", subscription, pairs, connection_name)
 
     async def unsubscribe(
-        self, subscription: str, pairs: str = None, connection_name: str = "main"
+        self, subscription: str, pairs: list = None, connection_name: str = "main"
     ) -> None:
         await self._sub_unsub("unsubscribe", subscription, pairs, connection_name)
 
