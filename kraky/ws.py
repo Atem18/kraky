@@ -2,6 +2,7 @@
 import asyncio
 import json
 import socket
+from typing import Callable
 
 import websockets
 
@@ -15,12 +16,12 @@ class KrakyWsError(Exception):
 class KrakyWsClient:
     """Kraken Websocket client implementation"""
 
-    def __init__(self, connection_env="production"):
+    def __init__(self, connection_env: str = "production") -> None:
         self.connection_env = connection_env
-        self.connections = {}
+        self.connections: dict = {}
         self.logger = get_module_logger(__name__)
 
-    async def connect(self, handler, connection_name="main"):
+    async def connect(self, handler: Callable, connection_name: str = "main") -> None:
         if self.connection_env == "production":
             ws_url = "wss://ws.kraken.com"
         elif self.connection_env == "production-auth":
@@ -54,16 +55,20 @@ class KrakyWsClient:
                 self.logger.error("Connection to Kraken WS closed, reconnecting...")
                 continue
 
-    async def disconnect(self, connection_name="main"):
+    async def disconnect(self, connection_name: str = "main") -> None:
         if self.connections[connection_name] is not None:
             await self.connections[connection_name].close()
             del self.connections[connection_name]
 
     async def _sub_unsub(
-        self, sub_type, subscription, pairs=None, connection_name="main"
-    ):
+        self,
+        sub_type: str,
+        subscription: str,
+        pairs: str = None,
+        connection_name: str = "main",
+    ) -> None:
         while connection_name not in self.connections:
-            await asyncio.sleep(1)
+            await asyncio.sleep(0.1)
         websocket = self.connections[connection_name]
         payload = {
             "event": sub_type,
@@ -73,8 +78,46 @@ class KrakyWsClient:
             payload["pair"] = pairs
         await websocket.send(json.dumps(payload))
 
-    async def subscribe(self, subscription, pairs=None, connection_name="main"):
+    async def subscribe(
+        self, subscription: str, pairs: str = None, connection_name: str = "main"
+    ) -> None:
         await self._sub_unsub("subscribe", subscription, pairs, connection_name)
 
-    async def unsubscribe(self, subscription, pairs=None, connection_name="main"):
+    async def unsubscribe(
+        self, subscription: str, pairs: str = None, connection_name: str = "main"
+    ) -> None:
         await self._sub_unsub("unsubscribe", subscription, pairs, connection_name)
+
+    async def add_order(
+        self,
+        token: str,
+        pair: str,
+        type: str,
+        ordertype: str,
+        volume: float,
+        price: float = None,
+        price2: float = None,
+        leverage: float = None,
+        oflags: str = None,
+        starttm: str = None,
+        expiretm: str = None,
+        userref: str = None,
+        validate: str = None,
+        close_ordertype: str = None,
+        close_price: float = None,
+        close_price2: float = None,
+        trading_agreement: str = None,
+        reqid: int = None,
+        event: str = "addOrder",
+        connection_name: str = "main",
+    ) -> None:
+        """https://docs.kraken.com/websockets/#message-addOrder"""
+        data = {
+            arg: value
+            for arg, value in locals().items()
+            if arg != "self" and value is not None
+        }
+        while connection_name not in self.connections:
+            await asyncio.sleep(0.1)
+        websocket = self.connections[connection_name]
+        await websocket.send(json.dumps(data))
