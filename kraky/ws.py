@@ -121,3 +121,40 @@ class KrakyWsClient:
             await asyncio.sleep(0.1)
         websocket = self.connections[connection_name]
         await websocket.send(json.dumps(data))
+
+    async def cancel_order(
+        self,
+        token: str,
+        txid: list,
+        reqid: int = None,
+        event: str = "cancelOrder",
+        connection_name: str = "main",
+    ) -> None:
+        """https://docs.kraken.com/websockets/#message-cancelOrder"""
+        data = {
+            arg: value
+            for arg, value in locals().items()
+            if arg != "self" and value is not None
+        }
+        while connection_name not in self.connections:
+            await asyncio.sleep(0.1)
+        websocket = self.connections[connection_name]
+        await websocket.send(json.dumps(data))
+
+    async def cancel_all(
+        self,
+        token: str,
+        reqid: int = None,
+        event: str = "cancelAll",
+        connection_name: str = "main",
+    ) -> None:
+        """https://docs.kraken.com/websockets/#message-cancelAll"""
+        data = {
+            arg: value
+            for arg, value in locals().items()
+            if arg != "self" and value is not None
+        }
+        while connection_name not in self.connections:
+            await asyncio.sleep(0.1)
+        websocket = self.connections[connection_name]
+        await websocket.send(json.dumps(data))
