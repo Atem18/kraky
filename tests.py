@@ -1,4 +1,3 @@
-import asyncio
 import pytest
 
 from kraky import KrakyApiClient, KrakyWsClient
@@ -19,7 +18,7 @@ class TestKrakyApiClient:
     async def test_get_ohlc_data(self):
         result = await kraky_api_client.get_ohlc_data("xbtusd", 1)
         assert "last" in result
-    
+
     @pytest.mark.asyncio
     async def test_get_tradable_asset_pairs(self):
         result = await kraky_api_client.get_tradable_asset_pairs(pair="xbtusd")
