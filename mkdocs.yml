@@ -1,0 +1,18 @@
+site_name: Kraky
+site_description: Python asyncio client for Kraken API REST and Kraken Websockets API using httpx and websockets
+
+theme:
+  name: 'material'
+
+repo_name: atem18/kraky
+repo_url: https://github.com/atem18/kraky
+edit_uri: ""
+
+nav:
+  - Introduction: 'index.md'
+  - API: 'api.md'
+  - WS: 'ws.md'
+
+plugins:
+  - search
+  - mkdocstrings
