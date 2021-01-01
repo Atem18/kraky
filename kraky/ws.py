@@ -120,15 +120,16 @@ class KrakyWsClient:
         self,
         event: str,
         subscription: dict,
-        pair: list,
+        pair: list = None,
         reqid: int = None,
         connection_name: str = "main",
     ) -> None:
         data: dict = {
             "event": event,
             "subscription": subscription,
-            "pair": pair
         }
+        if pair:
+            data["pair"] = pair
         if reqid:
             data["reqid"] = reqid
         await self._send(data=data, connection_name=connection_name)
@@ -136,7 +137,7 @@ class KrakyWsClient:
     async def subscribe(
         self,
         subscription: dict,
-        pair: list,
+        pair: list = None,
         reqid: int = None,
         connection_name: str = "main",
     ) -> None:
@@ -166,7 +167,7 @@ class KrakyWsClient:
     async def unsubscribe(
         self,
         subscription: dict,
-        pair: list,
+        pair: list = None,
         reqid: int = None,
         connection_name: str = "main",
     ) -> None:
