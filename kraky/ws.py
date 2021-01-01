@@ -52,8 +52,14 @@ class KrakyWsClient:
                     websocket = await websockets.connect(ws_url)
                     self.connections[connection_name]["websocket"] = websocket
                     if self.connections[connection_name]["subscriptions"]:
-                        for subscription in self.connections[connection_name]["subscriptions"]:
-                            await self.subscribe(subscription=subscription["subscription"], pair=subscription["pair"], connection_name=connection_name)
+                        for subscription in self.connections[connection_name][
+                            "subscriptions"
+                        ]:
+                            await self.subscribe(
+                                subscription=subscription["subscription"],
+                                pair=subscription["pair"],
+                                connection_name=connection_name,
+                            )
                 else:
                     message = await websocket.recv()
                     if "errorMessage" in message:
@@ -112,25 +118,24 @@ class KrakyWsClient:
     async def _sub_unsub(
         self,
         event: str,
-        subscription: str,
-        pair: list = None,
+        subscription: dict,
+        pair: list,
         reqid: int = None,
         connection_name: str = "main",
     ) -> None:
         data: dict = {
             "event": event,
             "subscription": subscription,
+            "pair": pair
         }
-        if pair:
-            data["pair"] = pair
         if reqid:
             data["reqid"] = reqid
         await self._send(data=data, connection_name=connection_name)
 
     async def subscribe(
         self,
-        subscription: str,
-        pair: list = None,
+        subscription: dict,
+        pair: list,
         reqid: int = None,
         connection_name: str = "main",
     ) -> None:
@@ -153,11 +158,14 @@ class KrakyWsClient:
             reqid=reqid,
             connection_name=connection_name,
         )
+        self.connections[connection_name]["subscriptions"].append(
+            {"event": "subscribe", "pair": pair, "subscription": subscription}
+        )
 
     async def unsubscribe(
         self,
-        subscription: str,
-        pair: list = None,
+        subscription: dict,
+        pair: list,
         reqid: int = None,
         connection_name: str = "main",
     ) -> None:
