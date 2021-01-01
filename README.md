@@ -6,7 +6,7 @@ Python asyncio client for Kraken API REST and Kraken Websockets API using httpx 
 
 ## Docs
 
-    [Krkay docs](https://kraky.readthedocs.io/en/latest/ "Docs")
+    https://kraky.readthedocs.io/en/latest/
 
 ## Usage
 
