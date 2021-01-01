@@ -9,10 +9,6 @@ import websockets
 from .log import get_module_logger
 
 
-class KrakyWsError(Exception):
-    """Raise exception when Kraken's Websocket raise an error"""
-
-
 class KrakyWsClient:
     """Kraken Websocket client implementation"""
 
@@ -91,14 +87,7 @@ class KrakyWsClient:
         while connection_name not in self.connections:
             await asyncio.sleep(0.1)
         websocket = self.connections[connection_name]["websocket"]
-        try:
-            await websocket.send(json.dumps(data))
-        except socket.gaierror:
-            raise KrakyWsError
-        except websockets.exceptions.ConnectionClosedError:
-            raise KrakyWsError
-        except websockets.exceptions.ConnectionClosedOK:
-            raise KrakyWsError
+        await websocket.send(json.dumps(data))
 
     async def ping(self, reqid: int = None, connection_name: str = "main") -> None:
         """
@@ -108,12 +97,13 @@ class KrakyWsClient:
         Arguments:
             requid: Optional - client originated ID reflected in response message
             connection_name: Name of the connection you want to ping
-
-        Raises:
-            KrakyWsError: If the connection has an issue
         """
+        data: dict = {}
+        data["event"] = "ping"
+        if reqid:
+            data["reqid"] = reqid
         await self._send(
-            data={"event": "ping", "reqid": reqid}, connection_name=connection_name
+            data=data, connection_name=connection_name
         )
 
     async def _sub_unsub(
@@ -149,9 +139,6 @@ class KrakyWsClient:
             pair: Optional - Array of currency pairs. Format of each pair is "A/B", where A and B are ISO 4217-A3 for standardized assets and popular unique symbol if not standardized.
             reqid: Optional - client originated ID reflected in response message
             connection_name: name of the connection you want to subscribe to
-
-        Raises:
-            KrakyWsError: If the connection has an issue
         """
         await self._sub_unsub(
             event="subscribe",
@@ -179,9 +166,6 @@ class KrakyWsClient:
             pair: Optional - Array of currency pairs. Format of each pair is "A/B", where A and B are ISO 4217-A3 for standardized assets and popular unique symbol if not standardized.
             reqid: Optional - client originated ID reflected in response message
             connection_name: name of the connection you want to subscribe to
-
-        Raises:
-            KrakyWsError: If the connection has an issue
         """
         await self._sub_unsub(
             event="unsubscribe",
