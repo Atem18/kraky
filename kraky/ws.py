@@ -34,9 +34,6 @@ class KrakyWsClient:
         Arguments:
             handler: A function that will manage WS's messages
             connection_name: Give it a proper name to distinguish between the public and private WS
-
-        Raises:
-            KrakyWsError: If the connection has an issue
         """
         if self.connection_env == "production":
             ws_url = "wss://ws.kraken.com"
@@ -47,12 +44,16 @@ class KrakyWsClient:
         elif self.connection_env == "beta-auth":
             ws_url = "wss://beta-ws-auth.kraken.com"
         websocket = await websockets.connect(ws_url)
-        self.connections[connection_name] = websocket
+        self.connections[connection_name]["websocket"] = websocket
+        self.connections[connection_name]["subscriptions"] = []
         while True:
             try:
                 if not websocket.open:
                     websocket = await websockets.connect(ws_url)
-                    self.connections[connection_name] = websocket
+                    self.connections[connection_name]["websocket"] = websocket
+                    if self.connections[connection_name]["subscriptions"]:
+                        for subscription in self.connections[connection_name]["subscriptions"]:
+                            await self.subscribe(subscription=subscription["subscription"], pair=subscription["pair"], connection_name=connection_name)
                 else:
                     message = await websocket.recv()
                     if "errorMessage" in message:
@@ -61,12 +62,12 @@ class KrakyWsClient:
                     else:
                         data = json.loads(message)
                         await handler(data)
-            except socket.gaierror as err:
-                raise KrakyWsError(err)
-            except websockets.exceptions.ConnectionClosedError as err:
-                raise KrakyWsError(err)
-            except websockets.exceptions.ConnectionClosedOK as err:
-                raise KrakyWsError(err)
+            except socket.gaierror:
+                continue
+            except websockets.exceptions.ConnectionClosedError:
+                continue
+            except websockets.exceptions.ConnectionClosedOK:
+                continue
 
     async def disconnect(self, connection_name: str = "main") -> None:
         """
@@ -76,14 +77,21 @@ class KrakyWsClient:
             connection_name: name of the connection you want to disconnect from
         """
         if self.connections[connection_name] is not None:
-            await self.connections[connection_name].close()
+            await self.connections[connection_name]["websocket"].close()
             del self.connections[connection_name]
 
     async def _send(self, data: dict, connection_name: str = "main") -> None:
         while connection_name not in self.connections:
             await asyncio.sleep(0.1)
-        websocket = self.connections[connection_name]
-        await websocket.send(json.dumps(data))
+        websocket = self.connections[connection_name]["websocket"]
+        try:
+            await websocket.send(json.dumps(data))
+        except socket.gaierror:
+            raise KrakyWsError
+        except websockets.exceptions.ConnectionClosedError:
+            raise KrakyWsError
+        except websockets.exceptions.ConnectionClosedOK:
+            raise KrakyWsError
 
     async def ping(self, reqid: int = None, connection_name: str = "main") -> None:
         """
