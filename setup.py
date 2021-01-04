@@ -10,7 +10,7 @@ README = (HERE / "README.md").read_text()
 # This call to setup() does all the work
 setup(
     name='kraky',
-    version='0.9.5',
+    version='0.9.6',
     description='Python asyncio client for Kraken API REST and Kraken Websockets API using httpx and websockets',
     long_description=README,
     long_description_content_type="text/markdown",

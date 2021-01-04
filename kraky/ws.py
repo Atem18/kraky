@@ -71,6 +71,8 @@ class KrakyWsClient:
                 continue
             except websockets.exceptions.ConnectionClosedOK:
                 continue
+            except ConnectionResetError:
+                continue
 
     async def disconnect(self, connection_name: str = "main") -> None:
         """
