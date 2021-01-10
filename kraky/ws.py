@@ -66,12 +66,16 @@ class KrakyWsClient:
                         data = json.loads(message)
                         await handler(data)
             except socket.gaierror:
+                self.logger.error("Socket gaia error, let's reconnect anyway...")
                 continue
             except websockets.exceptions.ConnectionClosedError:
+                self.logger.error("WebSockets connection closed error, let's reconnect anyway...")
                 continue
             except websockets.exceptions.ConnectionClosedOK:
+                self.logger.error("WebSockets connection closed ok, let's reconnect anyway...")
                 continue
             except ConnectionResetError:
+                self.logger.error("Connection reset error, let's reconnect anyway...")
                 continue
 
     async def disconnect(self, connection_name: str = "main") -> None:
@@ -82,14 +86,39 @@ class KrakyWsClient:
             connection_name: name of the connection you want to disconnect from
         """
         if self.connections[connection_name] is not None:
-            await self.connections[connection_name]["websocket"].close()
+            try:
+                await self.connections[connection_name]["websocket"].close()
+            except socket.gaierror:
+                self.logger.error("Socket gaia error, let's disconnect anyway...")
+                pass
+            except websockets.exceptions.ConnectionClosedError:
+                self.logger.error("WebSockets connection closed error, let's disconnect anyway...")
+                pass
+            except websockets.exceptions.ConnectionClosedOK:
+                self.logger.error("WebSockets connection closed ok, let's disconnect anyway...")
+                pass
+            except ConnectionResetError:
+                self.logger.error("Connection reset error, let's disconnect anyway...")
+                pass
             del self.connections[connection_name]
 
     async def _send(self, data: dict, connection_name: str = "main") -> None:
         while connection_name not in self.connections:
             await asyncio.sleep(0.1)
-        websocket = self.connections[connection_name]["websocket"]
-        await websocket.send(json.dumps(data))
+        try:
+            await self.connections[connection_name]["websocket"].send(json.dumps(data))
+        except socket.gaierror:
+            self.logger.error("Socket gaia error, message not sent...")
+            pass
+        except websockets.exceptions.ConnectionClosedError:
+            self.logger.error("WebSockets connection closed error, message not sent...")
+            pass
+        except websockets.exceptions.ConnectionClosedOK:
+            self.logger.error("WebSockets connection closed ok, message not sent...")
+            pass
+        except ConnectionResetError:
+            self.logger.error("Connection reset error, message not sent...")
+            pass
 
     async def ping(self, reqid: int = None, connection_name: str = "main") -> None:
         """
@@ -104,9 +133,7 @@ class KrakyWsClient:
         data["event"] = "ping"
         if reqid:
             data["reqid"] = reqid
-        await self._send(
-            data=data, connection_name=connection_name
-        )
+        await self._send(data=data, connection_name=connection_name)
 
     async def _sub_unsub(
         self,
