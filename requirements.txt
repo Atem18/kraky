@@ -7,5 +7,5 @@ mkdocs-material
 mkdocstrings
 
 # Testing
-pytest==6.2.1
+pytest==6.2.2
 pytest-asyncio==0.14.0
