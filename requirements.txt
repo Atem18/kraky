@@ -1,4 +1,4 @@
-httpx==0.16.1
+httpx==0.17.1
 websockets==8.1
 
 # Documentation
