@@ -90,16 +90,12 @@ class KrakyWsClient:
                 await self.connections[connection_name]["websocket"].close()
             except socket.gaierror:
                 self.logger.debug("Socket gaia error, let's disconnect anyway...")
-                pass
             except websockets.exceptions.ConnectionClosedError:
                 self.logger.debug("WebSockets connection closed error, let's disconnect anyway...")
-                pass
             except websockets.exceptions.ConnectionClosedOK:
                 self.logger.debug("WebSockets connection closed ok, let's disconnect anyway...")
-                pass
             except ConnectionResetError:
                 self.logger.debug("Connection reset error, let's disconnect anyway...")
-                pass
             del self.connections[connection_name]
 
     async def _send(self, data: dict, connection_name: str = "main") -> None:
@@ -109,16 +105,12 @@ class KrakyWsClient:
             await self.connections[connection_name]["websocket"].send(json.dumps(data))
         except socket.gaierror:
             self.logger.debug("Socket gaia error, message not sent...")
-            pass
         except websockets.exceptions.ConnectionClosedError:
             self.logger.debug("WebSockets connection closed error, message not sent...")
-            pass
         except websockets.exceptions.ConnectionClosedOK:
             self.logger.debug("WebSockets connection closed ok, message not sent...")
-            pass
         except ConnectionResetError:
             self.logger.debug("Connection reset error, message not sent...")
-            pass
 
     async def ping(self, reqid: int = None, connection_name: str = "main") -> None:
         """
