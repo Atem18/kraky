@@ -1,5 +1,5 @@
 httpx==0.18.1
-websockets==9.0.1
+websockets==9.0.2
 
 # Documentation
 mkdocs
