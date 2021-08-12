@@ -27,7 +27,7 @@ class KrakyApiClient:
             secret: The Private key.
             tfa: Handle or not two-factor authentication (2FA)
         """
-        self.base_url = "https://api.kraken.com"
+        self.base_url: str = "https://api.kraken.com"
         self.api_key = api_key
         self.secret = secret
         self.tfa = tfa
