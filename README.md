@@ -14,18 +14,20 @@ Python asyncio client for Kraken API REST and Kraken Websockets API using httpx 
 ## Usage
 
 ### REST
+```python
+from kraky import KrakyApiClient
 
-    from kraky import KrakyApiClient
 
-    async def get_web_sockets_token():
-        kraken_api_key = ""
-        kraken_secret = ""
-        kraky_api_client = KrakyApiClient(
-            api_key=kraken_api_key, secret=kraken_secret
-        )
+async def get_web_sockets_token():
+    kraken_api_key = ""
+    kraken_secret = ""
+    kraky_api_client = KrakyApiClient(
+        api_key=kraken_api_key, secret=kraken_secret
+    )
 
-        ws_token = await self.kraky_api_client.get_web_sockets_token()
-        return ws_token
+    ws_token = await self.kraky_api_client.get_web_sockets_token()
+    return ws_token
+```
 
 ### Websocket
 
@@ -33,27 +35,29 @@ Python asyncio client for Kraken API REST and Kraken Websockets API using httpx 
 import asyncio
 from kraky import KrakyApiClient, KrakyWsClient
 
+
 async def get_ws_token():
     kraken_api_key = ""
     kraken_secret = ""
-    kraky_api_client = KrakyApiClient(
-        api_key=kraken_api_key, secret=kraken_secret
-    )
+    kraky_api_client = KrakyApiClient(api_key=kraken_api_key, secret=kraken_secret)
 
     ws_token = await kraky_api_client.get_web_sockets_token()
     return ws_token
 
+
 async def public_handler(response):
     print(response)
 
+
 async def private_handler(response):
     print(response)
+
 
 async def main():
 
     interval = 30
 
-    ws_pairs = ["XBT/USD", "ETH/USD]
+    ws_pairs = ["XBT/USD", "ETH/USD"]
 
     ws_token = await get_ws_token()
 
@@ -61,15 +65,11 @@ async def main():
     kraky_private_ws_client = KrakyWsClient("production-auth")
 
     asyncio.create_task(
-        kraky_public_ws_client.connect(
-            public_handler, connection_name="public"
-        )
+        kraky_public_ws_client.connect(public_handler, connection_name="public")
     )
 
     asyncio.create_task(
-        kraky_private_ws_client.connect(
-            private_handler, connection_name="private"
-        )
+        kraky_private_ws_client.connect(private_handler, connection_name="private")
     )
 
     await kraky_public_ws_client.subscribe(
@@ -87,10 +87,12 @@ async def main():
         connection_name="private",
     )
 
+
 if __name__ == "__main__":
     loop = asyncio.get_event_loop()
     loop.create_task(main())
     loop.run_forever()
+
 ```
 
 ## Compatibility
