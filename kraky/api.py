@@ -80,9 +80,9 @@ class KrakyApiClient:
         }
         return await self._request(uri, headers=headers, data=data)
 
-    async def get_server_time(self) -> dict:
+    async def get_server_time(self, *args, **kwargs) -> dict:
         """
-        https://www.kraken.com/features/api#get-server-time
+        https://docs.kraken.com/rest/#operation/getServerTime
 
         Return:
             Server's time
@@ -92,9 +92,9 @@ class KrakyApiClient:
         """
         return await self._public_request(endpoint="Time")
 
-    async def get_system_status(self) -> dict:
+    async def get_system_status(self, *args, **kwargs) -> dict:
         """
-        https://www.kraken.com/features/api#get-system-status
+        https://docs.kraken.com/rest/#operation/getSystemStatus
 
         Return:
             System's status
@@ -105,18 +105,21 @@ class KrakyApiClient:
         return await self._public_request(endpoint="SystemStatus")
 
     async def get_asset_info(
-        self, info: str = None, aclass: str = None, asset: str = None
+        self, asset: str = None, aclass: str = None, *args, **kwargs
     ) -> dict:
         """
-        https://www.kraken.com/features/api#get-asset-info
+        https://docs.kraken.com/rest/#operation/getAssetInfo
 
         Arguments:
-            info: info to retrieve (optional); all info (default)
-            aclass: asset class (optional); currency (default)
-            asset: comma delimited list of assets to get info on (optional.  default = all for given asset class)
+            asset: Comma delimited list of assets to get info on.
+            aclass: Asset class. (optional, default: currency)
+
+        Example:
+            asset=XBT,ETH
+            aclass=currency
 
         Return:
-            Array of asset names and their info
+            Asset Info
 
         Raises:
             KrakyApiError: If the error key's value is not empty
@@ -129,14 +132,17 @@ class KrakyApiClient:
         return await self._public_request(endpoint="Assets", data=data)
 
     async def get_tradable_asset_pairs(
-        self, info: str = None, pair: str = None
+        self, pair: str = None, info: str = None, *args, **kwargs
     ) -> dict:
         """
-        https://www.kraken.com/features/api#get-tradable-pairs
+        https://docs.kraken.com/rest/#operation/getTradableAssetPairs
 
         Arguments:
-            info: info to retrieve (optional)
-            pair: comma delimited list of asset pairs to get info on (optional.  default = all)
+            pair: Asset pairs to get data for
+            info: Info to retrieve. (optional)
+
+        Example:
+            pair=XXBTCZUSD,XETHXXBT
 
         Return:
             Array of pair names and their info
@@ -151,15 +157,18 @@ class KrakyApiClient:
         }
         return await self._public_request(endpoint="AssetPairs", data=data)
 
-    async def get_ticker_information(self, pair: str) -> dict:
+    async def get_ticker_information(self, pair: str, *args, **kwargs) -> dict:
         """
-        https://www.kraken.com/features/api#get-ticker-info
+        https://docs.kraken.com/rest/#operation/getTickerInformation
 
         Arguments:
-            pair: comma delimited list of asset pairs to get info on
+            pair: Asset pair to get data for
+
+        Example:
+            pair=XBTUSD
 
         Return:
-            Array of pair names and their ticker info
+            Asset Ticker Info
 
         Raises:
             KrakyApiError: If the error key's value is not empty
@@ -172,15 +181,20 @@ class KrakyApiClient:
         return await self._public_request(endpoint="Ticker", data=data)
 
     async def get_ohlc_data(
-        self, pair: str, interval: int = None, since: str = None
+        self, pair: str, interval: int = None, since: str = None, *args, **kwargs
     ) -> dict:
         """
-        https://www.kraken.com/features/api#get-ohlc-data
+        https://docs.kraken.com/rest/#operation/getOHLCData
 
         Arguments:
-            pair: asset pair to get OHLC data for
-            interval: time frame interval in minutes (optional): 1 (default), 5, 15, 30, 60, 240, 1440, 10080, 21600
-            since: return committed OHLC data since given id (optional.  exclusive)
+            pair: Asset pair to get data for
+            interval: Time frame interval in minutes
+            since: Return committed OHLC data since given ID
+
+        Example:
+            pair=XBTUSD
+            interval=60
+            since=1548111600
 
         Return:
             Array of pair name and OHLC data
@@ -195,13 +209,19 @@ class KrakyApiClient:
         }
         return await self._public_request(endpoint="OHLC", data=data)
 
-    async def get_order_book(self, pair: str, count: int = None) -> dict:
+    async def get_order_book(
+        self, pair: str, count: int = None, *args, **kwargs
+    ) -> dict:
         """
-        https://www.kraken.com/features/api#get-order-book
+        https://docs.kraken.com/rest/#operation/getOrderBook
 
         Arguments:
-            pair: asset pair to get market depth for
-            count: maximum number of asks/bids (optional)
+            pair: Asset pair to get data for
+            count: maximum number of asks/bids
+
+        Example:
+            pair=XBTUSD
+            count=2
 
         Return:
             Array of pair name and market depth
@@ -216,13 +236,19 @@ class KrakyApiClient:
         }
         return await self._public_request(endpoint="Depth", data=data)
 
-    async def get_recent_trades(self, pair: str, since: str = None) -> dict:
+    async def get_recent_trades(
+        self, pair: str, since: str = None, *args, **kwargs
+    ) -> dict:
         """
-        https://www.kraken.com/features/api#get-recent-trades
+        https://docs.kraken.com/rest/#operation/getRecentTrades
 
         Arguments:
-            pair: asset pair to get trade data for
-            since: return trade data since given id (optional.  exclusive)
+            pair: Asset pair to get data for
+            since: Return trade data since given timestamp
+
+        Example:
+            pair=XBTUSD
+            since=1616663618
 
         Return:
             Array of pair name and recent trade data
@@ -237,13 +263,19 @@ class KrakyApiClient:
         }
         return await self._public_request(endpoint="Trades", data=data)
 
-    async def get_recent_spread_data(self, pair: str, since: str = None) -> dict:
+    async def get_recent_spread_data(
+        self, pair: str, since: str = None, *args, **kwargs
+    ) -> dict:
         """
         https://www.kraken.com/features/api#get-recent-spread-data
 
         Arguments:
-            pair: asset pair to get spread data for
-            since: return spread data since given id (optional.  inclusive)
+            pair: Asset pair to get data for
+            since: Return spread data since given ID
+
+        Example:
+            pair=XBTUSD
+            since=1548122302
 
         Return:
             Array of pair name and recent spread data
@@ -258,19 +290,21 @@ class KrakyApiClient:
         }
         return await self._public_request(endpoint="Spread", data=data)
 
-    async def get_account_balance(self) -> dict:
+    async def get_account_balance(self, *args, **kwargs) -> dict:
         """
-        https://www.kraken.com/features/api#get-account-balance
+        https://docs.kraken.com/rest/#operation/getAccountBalance
 
         Return:
-            Array of asset names and balance amount
+            Account Balance
 
         Raises:
             KrakyApiError: If the error key's value is not empty
         """
         return await self._private_request(endpoint="Balance")
 
-    async def get_trade_balance(self, aclass: str = None, asset: str = None) -> dict:
+    async def get_trade_balance(
+        self, aclass: str = None, asset: str = None, *args, **kwargs
+    ) -> dict:
         """
         https://www.kraken.com/features/api#get-trade-balance
 
@@ -291,7 +325,9 @@ class KrakyApiClient:
         }
         return await self._private_request(endpoint="TradeBalance", data=data)
 
-    async def get_open_orders(self, trades: bool = False, userref: str = None) -> dict:
+    async def get_open_orders(
+        self, trades: bool = False, userref: str = None, *args, **kwargs
+    ) -> dict:
         """
         https://www.kraken.com/features/api#get-open-orders
 
@@ -320,6 +356,8 @@ class KrakyApiClient:
         end: str = None,
         ofs: str = None,
         closetime: str = None,
+        *args,
+        **kwargs,
     ) -> dict:
         """
         https://www.kraken.com/features/api#get-closed-orders
@@ -345,7 +383,7 @@ class KrakyApiClient:
         return await self._private_request(endpoint="ClosedOrders", data=data)
 
     async def query_orders_info(
-        self, txid: str, trades: bool = False, userref: str = None
+        self, txid: str, trades: bool = False, userref: str = None, *args, **kwargs
     ) -> dict:
         """
         https://www.kraken.com/features/api#query-orders-info
@@ -375,6 +413,7 @@ class KrakyApiClient:
         start: str = None,
         end: str = None,
         ofs: str = None,
+        *args, **kwargs
     ) -> dict:
         """
         https://www.kraken.com/features/api#get-trades-history
@@ -399,7 +438,7 @@ class KrakyApiClient:
         }
         return await self._private_request(endpoint="TradesHistory", data=data)
 
-    async def query_trades_info(self, txid: str, trades: bool = False) -> dict:
+    async def query_trades_info(self, txid: str, trades: bool = False, *args, **kwargs) -> dict:
         """
         https://www.kraken.com/features/api#query-trades-info
 
@@ -421,7 +460,7 @@ class KrakyApiClient:
         return await self._private_request(endpoint="QueryTrades", data=data)
 
     async def get_open_positions(
-        self, txid: str, docalcs: bool = False, consolidation: str = None
+        self, txid: str, docalcs: bool = False, consolidation: str = None, *args, **kwargs
     ) -> dict:
         """
         https://www.kraken.com/features/api#get-open-positions
@@ -452,6 +491,7 @@ class KrakyApiClient:
         start: str = None,
         end: str = None,
         ofs: str = None,
+        *args, **kwargs
     ) -> dict:
         """
         https://www.kraken.com/features/api#get-ledgers-info
@@ -477,7 +517,7 @@ class KrakyApiClient:
         }
         return await self._private_request(endpoint="Ledgers", data=data)
 
-    async def query_ledgers(self, id: str) -> dict:
+    async def query_ledgers(self, id: str, *args, **kwargs) -> dict:
         """
         https://www.kraken.com/features/api#query-ledgers
 
@@ -497,7 +537,7 @@ class KrakyApiClient:
         }
         return await self._private_request(endpoint="QueryLedgers", data=data)
 
-    async def get_trade_volume(self, pair: str = None, fee_info: bool = None) -> dict:
+    async def get_trade_volume(self, pair: str = None, fee_info: bool = None, *args, **kwargs) -> dict:
         """
         https://www.kraken.com/features/api#get-trade-volume
 
@@ -527,6 +567,7 @@ class KrakyApiClient:
         asset: str = None,
         starttm: str = None,
         endtm: str = None,
+        *args, **kwargs
     ) -> str:
         """
         https://www.kraken.com/features/api#add-history-export
@@ -553,7 +594,7 @@ class KrakyApiClient:
         }
         return await self._private_request(endpoint="AddExport", data=data)
 
-    async def get_export_statuses(self, report: str) -> dict:
+    async def get_export_statuses(self, report: str, *args, **kwargs) -> dict:
         """
         https://www.kraken.com/features/api#add-history-export
 
@@ -573,7 +614,7 @@ class KrakyApiClient:
         }
         return await self._private_request(endpoint="ExportStatus", data=data)
 
-    async def get_export_report(self, id: str) -> Any:
+    async def get_export_report(self, id: str, *args, **kwargs) -> Any:
         """
         https://www.kraken.com/features/api#get-history-export
         Arguments:
@@ -592,7 +633,7 @@ class KrakyApiClient:
         }
         return await self._private_request(endpoint="RetrieveExport", data=data)
 
-    async def remove_export_report(self, type: str, id: str) -> str:
+    async def remove_export_report(self, type: str, id: str, *args, **kwargs) -> str:
         """
         https://www.kraken.com/features/api#remove-history-export
 
@@ -630,6 +671,7 @@ class KrakyApiClient:
         close_ordertype: str = None,
         close_price: float = None,
         close_price2: float = None,
+        *args, **kwargs
     ) -> dict:
         """
         https://www.kraken.com/features/api#add-standard-order
@@ -665,7 +707,7 @@ class KrakyApiClient:
         }
         return await self._private_request(endpoint="AddOrder", data=data)
 
-    async def cancel_open_order(self, txid: str) -> dict:
+    async def cancel_open_order(self, txid: str, *args, **kwargs) -> dict:
         """
         https://www.kraken.com/features/api#cancel-open-order
 
@@ -686,7 +728,7 @@ class KrakyApiClient:
         }
         return await self._private_request(endpoint="CancelOrder", data=data)
 
-    async def cancel_all_open_orders(self) -> dict:
+    async def cancel_all_open_orders(self, *args, **kwargs) -> dict:
         """
         https://www.kraken.com/features/api#cancel-all-open-orders
 
@@ -703,7 +745,7 @@ class KrakyApiClient:
         }
         return await self._private_request(endpoint="CancelAll", data=data)
 
-    async def get_last_price(self, pair: str) -> float:
+    async def get_last_price(self, pair: str, *args, **kwargs) -> float:
         """
         Get last price for given pair
 
@@ -719,7 +761,7 @@ class KrakyApiClient:
         ohlc = await self.get_ohlc_data(pair)
         return float(list(ohlc.values())[0][-1][4])
 
-    async def get_web_sockets_token(self) -> str:
+    async def get_web_sockets_token(self, *args, **kwargs) -> str:
         """
         https://www.kraken.com/features/api#ws-auth
 

@@ -13,6 +13,19 @@ Python asyncio client for Kraken API REST and Kraken Websockets API using httpx 
 
 ## Usage
 
+### CLI
+
+Kraky provides a CLI that matches the API function names and args.
+
+You can use it like the following:
+
+```bash
+kraky get_ohlc_data pair=XBTUSD interval=240
+```
+
+You can replace get_ohlc_data by any kraky API function and pair=XBTUSD or interval=240 by any function argument.
+Please respect the format key=value.
+
 ### REST
 
     from kraky import KrakyApiClient
