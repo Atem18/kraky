@@ -40,6 +40,8 @@ async def get_web_sockets_token():
 
     ws_token = await self.kraky_api_client.get_web_sockets_token()
     return ws_token
+
+asyncio.run(get_web_sockets_token)
 ```
 
 ### Websocket
@@ -49,12 +51,14 @@ import asyncio
 from kraky import KrakyApiClient, KrakyWsClient
 
 
-async def get_ws_token():
+async def get_web_sockets_token():
     kraken_api_key = ""
     kraken_secret = ""
-    kraky_api_client = KrakyApiClient(api_key=kraken_api_key, secret=kraken_secret)
+    kraky_api_client = KrakyApiClient(
+        api_key=kraken_api_key, secret=kraken_secret
+    )
 
-    ws_token = await kraky_api_client.get_web_sockets_token()
+    ws_token = await self.kraky_api_client.get_web_sockets_token()
     return ws_token
 
 
