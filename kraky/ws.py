@@ -223,7 +223,7 @@ class KrakyWsClient:
         data = {
             arg: value
             for arg, value in locals().items()
-            if arg != "self" and value is not None
+            if arg != "self" and arg != "connection_name" and value is not None
         }
         await self._send(data=data, connection_name=connection_name)
 
@@ -239,7 +239,7 @@ class KrakyWsClient:
         data = {
             arg: value
             for arg, value in locals().items()
-            if arg != "self" and value is not None
+            if arg != "self" and arg != "connection_name" and value is not None
         }
         await self._send(data=data, connection_name=connection_name)
 
@@ -254,7 +254,7 @@ class KrakyWsClient:
         data = {
             arg: value
             for arg, value in locals().items()
-            if arg != "self" and value is not None
+            if arg != "self" and arg != "connection_name" and value is not None
         }
         await self._send(data=data, connection_name=connection_name)
 
@@ -270,6 +270,6 @@ class KrakyWsClient:
         data = {
             arg: value
             for arg, value in locals().items()
-            if arg != "self" and value is not None
+            if arg != "self" and arg != "connection_name" and value is not None
         }
         await self._send(data=data, connection_name=connection_name)
