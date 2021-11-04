@@ -20,9 +20,9 @@ jobs:
         run: poetry install
       - name: Build package
         run: poetry build
-      - name: Config Test PyPI url
-        run: poetry config repositories.testpypi https://test.pypi.org/legacy/
-      - name: Config Test Pypi token
-        run: poetry config pypi-token.testpypi ${{ secrets.test_pypi_password }}
       - name: Publish distribution 📦 to Test PyPI
-        run: poetry publish -r testpypi
+        uses: pypa/gh-action-pypi-publish@v1.4.2
+        with:
+          password: ${{ secrets.test_pypi_password }}
+          repository_url: https://test.pypi.org/legacy/
+          skip_existing: true
