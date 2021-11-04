@@ -19,6 +19,7 @@ python = "^3.7"
 httpx = "^0.20.0"
 websockets = "^10.0"
 typer = "^0.4.0"
+tox = "^3.24.4"
 
 [tool.poetry.dev-dependencies]
 pytest = "^6.2.4"
