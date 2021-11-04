@@ -21,4 +21,4 @@ jobs:
       - name: Build package
         run: poetry build
       - name: Publish distribution 📦 to Test PyPI
-        run: poetry publish -r https://test.pypi.org/legacy/ -p ${{ secrets.test_pypi_password }}
+        run: poetry publish -r testpypi -p ${{ secrets.test_pypi_password }}
