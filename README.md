@@ -2,7 +2,8 @@
 [![Language grade: Python](https://img.shields.io/lgtm/grade/python/g/Atem18/kraky.svg?logo=lgtm&logoWidth=18)](https://lgtm.com/projects/g/Atem18/kraky/context:python)
 
 # Kraky
-Python asyncio client for Kraken API REST and Kraken Websockets API using httpx and websockets
+Python client for Kraken API REST and Kraken Websockets API using httpx and websockets.
+Supports both sync and async for API REST.
 
 ## Installation 
     pip install kraky
@@ -26,15 +27,33 @@ kraky get_ohlc_data pair=XBTUSD interval=240
 You can replace get_ohlc_data by any kraky API function and pair=XBTUSD or interval=240 by any function argument.
 Please respect the format key=value.
 
-### REST
+### Sync REST API
 ```python
 from kraky import KrakyApiClient
+
+
+def get_web_sockets_token():
+    kraken_api_key = ""
+    kraken_secret = ""
+    kraky_api_client = KrakyApiClient(
+        api_key=kraken_api_key, secret=kraken_secret
+    )
+
+    ws_token = self.kraky_api_client.get_web_sockets_token()
+    return ws_token
+
+get_web_sockets_token()
+```
+
+### Async REST API
+```python
+from kraky import KrakyApiAsyncClient
 
 
 async def get_web_sockets_token():
     kraken_api_key = ""
     kraken_secret = ""
-    kraky_api_client = KrakyApiClient(
+    kraky_api_client = KrakyApiAsyncClient(
         api_key=kraken_api_key, secret=kraken_secret
     )
 
@@ -48,13 +67,13 @@ asyncio.run(get_web_sockets_token)
 
 ```python
 import asyncio
-from kraky import KrakyApiClient, KrakyWsClient
+from kraky import KrakyApiAsyncClient, KrakyWsClient
 
 
 async def get_web_sockets_token():
     kraken_api_key = ""
     kraken_secret = ""
-    kraky_api_client = KrakyApiClient(
+    kraky_api_client = KrakyApiAsyncClient(
         api_key=kraken_api_key, secret=kraken_secret
     )
 
