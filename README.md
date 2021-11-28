@@ -27,6 +27,14 @@ kraky get_ohlc_data pair=XBTUSD interval=240
 You can replace get_ohlc_data by any kraky API function and pair=XBTUSD or interval=240 by any function argument.
 Please respect the format key=value.
 
+It also supports .env files so you can also create a .env file with your api_key and secret and kraky will pick them up.
+
+Example:
+```bash
+KRAKEN_API_KEY=""
+KRAKEN_SECRET=""
+```
+
 ### Sync REST API
 ```python
 from kraky import KrakyApiClient
