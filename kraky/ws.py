@@ -2,6 +2,7 @@
 import asyncio
 import json
 import socket
+from re import sub
 from typing import Callable
 
 import websockets
@@ -221,7 +222,7 @@ class KrakyWsClient:
     ) -> None:
         """https://docs.kraken.com/websockets/#message-addOrder"""
         data = {
-            arg: value
+            sub("^close_(\w+)", r"close[\1]", arg): value
             for arg, value in locals().items()
             if arg != "self" and arg != "connection_name" and value is not None
         }
