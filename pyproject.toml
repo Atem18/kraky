@@ -23,7 +23,7 @@ tox = "^3.24.4"
 
 [tool.poetry.dev-dependencies]
 pytest = "^7.0.0"
-pytest-asyncio = "^0.17.0"
+pytest-asyncio = "^0.18.0"
 mkdocs = "^1.2.2"
 mkdocs-material = "^8.0.0"
 mkdocstrings = "^0.18.0"
