@@ -19,17 +19,17 @@ def main(
     kraken_api_key: str = typer.Option(
         "",
         envvar="KRAKEN_API_KEY",
-        help="See here to generate a pair : https://support.kraken.com/hc/en-us/articles/360000919966-How-to-generate-an-API-key-pair-"
+        help="See here to generate a pair : https://support.kraken.com/hc/en-us/articles/360000919966-How-to-generate-an-API-key-pair-",
     ),
     kraken_secret: str = typer.Option(
         "",
         envvar="KRAKEN_SECRET",
-        help="See here to generate a pair : https://support.kraken.com/hc/en-us/articles/360000919966-How-to-generate-an-API-key-pair-"
+        help="See here to generate a pair : https://support.kraken.com/hc/en-us/articles/360000919966-How-to-generate-an-API-key-pair-",
     ),
     tfa: bool = typer.Option(
         False,
         envvar="KRAKY_TFA",
-        help="Enable two-factor authentication. More info here : https://support.kraken.com/hc/en-us/articles/360000714526"
+        help="Enable two-factor authentication. More info here : https://support.kraken.com/hc/en-us/articles/360000714526",
     ),
 ):
     kraky_api_client = KrakyApiClient(

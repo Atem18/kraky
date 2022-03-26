@@ -13,7 +13,7 @@ from .log import get_module_logger
 class KrakyWsClient:
     """Kraken Websocket client implementation"""
 
-    def __init__(self, connection_env: str = "production") -> None:
+    def __init__(self, connection_env: str = "production", logging_level: str = "INFO") -> None:
         """
         Initialize the object.
 
@@ -22,7 +22,7 @@ class KrakyWsClient:
         """
         self.connection_env = connection_env
         self.connections: dict = {}
-        self.logger = get_module_logger(__name__)
+        self.logger = get_module_logger(__name__, logging_level)
 
     async def connect(self, handler: Callable, connection_name: str = "main") -> None:
         """

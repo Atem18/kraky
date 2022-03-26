@@ -47,7 +47,7 @@ def get_web_sockets_token():
         api_key=kraken_api_key, secret=kraken_secret
     )
 
-    ws_token = self.kraky_api_client.get_web_sockets_token()
+    ws_token = kraky_api_client.get_web_sockets_token()
     return ws_token
 
 get_web_sockets_token()
@@ -65,7 +65,7 @@ async def get_web_sockets_token():
         api_key=kraken_api_key, secret=kraken_secret
     )
 
-    ws_token = await self.kraky_api_client.get_web_sockets_token()
+    ws_token = await kraky_api_client.get_web_sockets_token()
     return ws_token
 
 asyncio.run(get_web_sockets_token)
@@ -85,7 +85,7 @@ async def get_web_sockets_token():
         api_key=kraken_api_key, secret=kraken_secret
     )
 
-    ws_token = await self.kraky_api_client.get_web_sockets_token()
+    ws_token = await kraky_api_client.get_web_sockets_token()
     return ws_token
 
 

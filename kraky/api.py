@@ -16,7 +16,13 @@ class KrakyApiError(Exception):
 
 
 class KrakyApi:
-    def __init__(self, api_key: str = "", secret: str = "", tfa: bool = False) -> None:
+    def __init__(
+        self,
+        api_key: str = "",
+        secret: str = "",
+        tfa: bool = False,
+        logging_level: str = "INFO",
+    ) -> None:
         """
         Generate first an API key pair : https://support.kraken.com/hc/en-us/articles/360000919966-How-to-generate-an-API-key-pair-
 
@@ -30,7 +36,7 @@ class KrakyApi:
         self.secret = secret
         self.tfa = tfa
         self.otp: str = ""
-        self.logger = get_module_logger(__name__)
+        self.logger = get_module_logger(__name__, logging_level)
 
     def _sign_message(self, api_path: str, data: dict) -> str:
         post_data = urllib.parse.urlencode(data)
@@ -415,7 +421,8 @@ class KrakyApiAsyncClient(KrakyApi):
         start: str = None,
         end: str = None,
         ofs: str = None,
-        *args, **kwargs
+        *args,
+        **kwargs,
     ) -> dict:
         """
         https://www.kraken.com/features/api#get-trades-history
@@ -440,7 +447,9 @@ class KrakyApiAsyncClient(KrakyApi):
         }
         return await self._private_request(endpoint="TradesHistory", data=data)
 
-    async def query_trades_info(self, txid: str, trades: bool = False, *args, **kwargs) -> dict:
+    async def query_trades_info(
+        self, txid: str, trades: bool = False, *args, **kwargs
+    ) -> dict:
         """
         https://www.kraken.com/features/api#query-trades-info
 
@@ -462,7 +471,12 @@ class KrakyApiAsyncClient(KrakyApi):
         return await self._private_request(endpoint="QueryTrades", data=data)
 
     async def get_open_positions(
-        self, txid: str, docalcs: bool = False, consolidation: str = None, *args, **kwargs
+        self,
+        txid: str,
+        docalcs: bool = False,
+        consolidation: str = None,
+        *args,
+        **kwargs,
     ) -> dict:
         """
         https://www.kraken.com/features/api#get-open-positions
@@ -493,7 +507,8 @@ class KrakyApiAsyncClient(KrakyApi):
         start: str = None,
         end: str = None,
         ofs: str = None,
-        *args, **kwargs
+        *args,
+        **kwargs,
     ) -> dict:
         """
         https://www.kraken.com/features/api#get-ledgers-info
@@ -539,7 +554,9 @@ class KrakyApiAsyncClient(KrakyApi):
         }
         return await self._private_request(endpoint="QueryLedgers", data=data)
 
-    async def get_trade_volume(self, pair: str = None, fee_info: bool = None, *args, **kwargs) -> dict:
+    async def get_trade_volume(
+        self, pair: str = None, fee_info: bool = None, *args, **kwargs
+    ) -> dict:
         """
         https://www.kraken.com/features/api#get-trade-volume
 
@@ -569,7 +586,8 @@ class KrakyApiAsyncClient(KrakyApi):
         asset: str = None,
         starttm: str = None,
         endtm: str = None,
-        *args, **kwargs
+        *args,
+        **kwargs,
     ) -> str:
         """
         https://www.kraken.com/features/api#add-history-export
@@ -673,7 +691,8 @@ class KrakyApiAsyncClient(KrakyApi):
         close_ordertype: str = None,
         close_price: float = None,
         close_price2: float = None,
-        *args, **kwargs
+        *args,
+        **kwargs,
     ) -> dict:
         """
         https://www.kraken.com/features/api#add-standard-order
@@ -935,9 +954,7 @@ class KrakyApiClient(KrakyApi):
         }
         return self._public_request(endpoint="OHLC", data=data)
 
-    def get_order_book(
-        self, pair: str, count: int = None, *args, **kwargs
-    ) -> dict:
+    def get_order_book(self, pair: str, count: int = None, *args, **kwargs) -> dict:
         """
         https://docs.kraken.com/rest/#operation/getOrderBook
 
@@ -962,9 +979,7 @@ class KrakyApiClient(KrakyApi):
         }
         return self._public_request(endpoint="Depth", data=data)
 
-    def get_recent_trades(
-        self, pair: str, since: str = None, *args, **kwargs
-    ) -> dict:
+    def get_recent_trades(self, pair: str, since: str = None, *args, **kwargs) -> dict:
         """
         https://docs.kraken.com/rest/#operation/getRecentTrades
 
@@ -1139,7 +1154,8 @@ class KrakyApiClient(KrakyApi):
         start: str = None,
         end: str = None,
         ofs: str = None,
-        *args, **kwargs
+        *args,
+        **kwargs,
     ) -> dict:
         """
         https://www.kraken.com/features/api#get-trades-history
@@ -1164,7 +1180,9 @@ class KrakyApiClient(KrakyApi):
         }
         return self._private_request(endpoint="TradesHistory", data=data)
 
-    def query_trades_info(self, txid: str, trades: bool = False, *args, **kwargs) -> dict:
+    def query_trades_info(
+        self, txid: str, trades: bool = False, *args, **kwargs
+    ) -> dict:
         """
         https://www.kraken.com/features/api#query-trades-info
 
@@ -1186,7 +1204,12 @@ class KrakyApiClient(KrakyApi):
         return self._private_request(endpoint="QueryTrades", data=data)
 
     def get_open_positions(
-        self, txid: str, docalcs: bool = False, consolidation: str = None, *args, **kwargs
+        self,
+        txid: str,
+        docalcs: bool = False,
+        consolidation: str = None,
+        *args,
+        **kwargs,
     ) -> dict:
         """
         https://www.kraken.com/features/api#get-open-positions
@@ -1217,7 +1240,8 @@ class KrakyApiClient(KrakyApi):
         start: str = None,
         end: str = None,
         ofs: str = None,
-        *args, **kwargs
+        *args,
+        **kwargs,
     ) -> dict:
         """
         https://www.kraken.com/features/api#get-ledgers-info
@@ -1263,7 +1287,9 @@ class KrakyApiClient(KrakyApi):
         }
         return self._private_request(endpoint="QueryLedgers", data=data)
 
-    def get_trade_volume(self, pair: str = None, fee_info: bool = None, *args, **kwargs) -> dict:
+    def get_trade_volume(
+        self, pair: str = None, fee_info: bool = None, *args, **kwargs
+    ) -> dict:
         """
         https://www.kraken.com/features/api#get-trade-volume
 
@@ -1293,7 +1319,8 @@ class KrakyApiClient(KrakyApi):
         asset: str = None,
         starttm: str = None,
         endtm: str = None,
-        *args, **kwargs
+        *args,
+        **kwargs,
     ) -> str:
         """
         https://www.kraken.com/features/api#add-history-export
@@ -1397,7 +1424,8 @@ class KrakyApiClient(KrakyApi):
         close_ordertype: str = None,
         close_price: float = None,
         close_price2: float = None,
-        *args, **kwargs
+        *args,
+        **kwargs,
     ) -> dict:
         """
         https://www.kraken.com/features/api#add-standard-order
