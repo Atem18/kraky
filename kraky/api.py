@@ -30,6 +30,7 @@ class KrakyApi:
             api_key: The API key.
             secret: The Private key.
             tfa: Handle or not two-factor authentication (2FA)
+            logging_level: Change the log level
         """
         self.base_url: str = "https://api.kraken.com"
         self.api_key = api_key

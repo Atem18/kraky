@@ -19,6 +19,7 @@ class KrakyWsClient:
 
         Arguments:
             connection_env: https://docs.kraken.com/websockets/#connectionDetails
+            logging_level: Change the log level
         """
         self.connection_env = connection_env
         self.connections: dict = {}
