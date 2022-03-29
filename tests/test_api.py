@@ -5,7 +5,6 @@ kraky_api_client = KrakyApiClient()
 
 
 class TestKrakyApiClient:
-
     def test_get_last_price(self):
         result = kraky_api_client.get_last_price("xbtusd")
         assert isinstance(result, float)

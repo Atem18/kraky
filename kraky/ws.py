@@ -13,7 +13,9 @@ from .log import get_module_logger
 class KrakyWsClient:
     """Kraken Websocket client implementation"""
 
-    def __init__(self, connection_env: str = "production", logging_level: str = "INFO") -> None:
+    def __init__(
+        self, connection_env: str = "production", logging_level: str = "INFO"
+    ) -> None:
         """
         Initialize the object.
 
@@ -25,13 +27,23 @@ class KrakyWsClient:
         self.connections: dict = {}
         self.logger = get_module_logger(__name__, logging_level)
 
-    async def connect(self, handler: Callable, connection_name: str = "main") -> None:
+    async def connect(
+        self,
+        handler: Callable,
+        connection_name: str = "main",
+        reply_timeout: int = 10,
+        ping_timeout: int = 5,
+        sleep_time: int = 5,
+    ) -> None:
         """
         Main function to be called.
 
         Arguments:
             handler: A function that will manage WS's messages
             connection_name: Give it a proper name to distinguish between the public and private WS
+            reply_timeout: Timeout after x seconds if no message on websocket
+            ping_timeout: Timeout after x seconds if no pong is received
+            sleep_time: Reconnects after x seconds when connection is dropped
         """
         if self.connection_env == "production":
             ws_url = "wss://ws.kraken.com"
@@ -60,24 +72,51 @@ class KrakyWsClient:
                                 connection_name=connection_name,
                             )
                 else:
-                    message = await websocket.recv()
-                    if "errorMessage" in message:
-                        error = json.loads(message)
-                        self.logger.error(error["errorMessage"])
-                    else:
-                        data = json.loads(message)
-                        await handler(data)
+                    try:
+                        message = await asyncio.wait_for(
+                            websocket.recv(), timeout=reply_timeout
+                        )
+                        if "errorMessage" in message:
+                            error = json.loads(message)
+                            self.logger.error(error["errorMessage"])
+                        else:
+                            data = json.loads(message)
+                            await handler(data)
+                    except asyncio.TimeoutError:
+                        try:
+                            pong = await websocket.ping()
+                            await asyncio.wait_for(pong, timeout=ping_timeout)
+                            self.logger.debug("Ping OK - keeping connection alive.")
+                            continue
+                        except:
+                            self.logger.debug(
+                                f"Ping error - retrying connection in {sleep_time} sec."
+                            )
+                            await asyncio.sleep(sleep_time)
+                            break
             except socket.gaierror:
-                self.logger.debug("Socket gaia error, let's reconnect anyway...")
+                self.logger.debug(
+                    f"Socket gaia error - retrying connection in {sleep_time} sec."
+                )
+                await asyncio.sleep(sleep_time)
                 continue
             except websockets.exceptions.ConnectionClosedError:
-                self.logger.debug("WebSockets connection closed error, let's reconnect anyway...")
+                self.logger.debug(
+                    f"WebSockets connection closed error - retrying connection in {sleep_time} sec."
+                )
+                await asyncio.sleep(sleep_time)
                 continue
             except websockets.exceptions.ConnectionClosedOK:
-                self.logger.debug("WebSockets connection closed ok, let's reconnect anyway...")
+                self.logger.debug(
+                    f"WebSockets connection closed ok - retrying connection in {sleep_time} sec."
+                )
+                await asyncio.sleep(sleep_time)
                 continue
             except ConnectionResetError:
-                self.logger.debug("Connection reset error, let's reconnect anyway...")
+                self.logger.debug(
+                    f"Connection reset error - retrying connection in {sleep_time} sec."
+                )
+                await asyncio.sleep(sleep_time)
                 continue
 
     async def disconnect(self, connection_name: str = "main") -> None:
@@ -91,13 +130,17 @@ class KrakyWsClient:
             try:
                 await self.connections[connection_name]["websocket"].close()
             except socket.gaierror:
-                self.logger.debug("Socket gaia error, let's disconnect anyway...")
+                self.logger.debug("Socket gaia error - disconnecting anyway.")
             except websockets.exceptions.ConnectionClosedError:
-                self.logger.debug("WebSockets connection closed error, let's disconnect anyway...")
+                self.logger.debug(
+                    "WebSockets connection closed error - disconnecting anyway."
+                )
             except websockets.exceptions.ConnectionClosedOK:
-                self.logger.debug("WebSockets connection closed ok, let's disconnect anyway...")
+                self.logger.debug(
+                    "WebSockets connection closed ok - disconnecting anyway."
+                )
             except ConnectionResetError:
-                self.logger.debug("Connection reset error, let's disconnect anyway...")
+                self.logger.debug("Connection reset error - disconnecting anyway.")
             del self.connections[connection_name]
 
     async def _send(self, data: dict, connection_name: str = "main") -> None:
@@ -106,13 +149,13 @@ class KrakyWsClient:
         try:
             await self.connections[connection_name]["websocket"].send(json.dumps(data))
         except socket.gaierror:
-            self.logger.debug("Socket gaia error, message not sent...")
+            self.logger.debug("Socket gaia error - message not sent.")
         except websockets.exceptions.ConnectionClosedError:
-            self.logger.debug("WebSockets connection closed error, message not sent...")
+            self.logger.debug("WebSockets connection closed error - message not sent.")
         except websockets.exceptions.ConnectionClosedOK:
-            self.logger.debug("WebSockets connection closed ok, message not sent...")
+            self.logger.debug("WebSockets connection closed ok - message not sent.")
         except ConnectionResetError:
-            self.logger.debug("Connection reset error, message not sent...")
+            self.logger.debug("Connection reset error - message not sent.")
 
     async def ping(self, reqid: int = None, connection_name: str = "main") -> None:
         """
