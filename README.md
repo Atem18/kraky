@@ -110,7 +110,7 @@ async def main():
 
     ws_pairs = ["XBT/USD", "ETH/USD"]
 
-    ws_token = await get_ws_token()
+    ws_token = await get_web_sockets_token()
 
     kraky_public_ws_client = KrakyWsClient("production")
     kraky_private_ws_client = KrakyWsClient("production-auth")
