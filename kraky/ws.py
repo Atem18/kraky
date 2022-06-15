@@ -148,6 +148,7 @@ class KrakyWsClient:
             await asyncio.sleep(0.1)
         try:
             await self.connections[connection_name]["websocket"].send(json.dumps(data))
+            await asyncio.sleep(0.1)
         except socket.gaierror:
             self.logger.debug("Socket gaia error - message not sent.")
         except websockets.exceptions.ConnectionClosedError:
