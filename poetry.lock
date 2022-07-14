@@ -568,7 +568,7 @@ python-versions = ">=3.6"
 
 [[package]]
 name = "typer"
-version = "0.5.0"
+version = "0.6.0"
 description = "Typer, build great CLIs. Easy to code. Based on Python type hints."
 category = "main"
 optional = false
@@ -644,7 +644,7 @@ testing = ["pytest (>=6)", "pytest-checkdocs (>=2.4)", "pytest-flake8", "pytest-
 [metadata]
 lock-version = "1.1"
 python-versions = "^3.7"
-content-hash = "d2f726a747e3bf8637c134016de73a0136d51a478eb26167240240e94a1221c5"
+content-hash = "aa8f4ba128400b96fe92cda87883dc204a7b249e307d95e4da46005ce0ede865"
 
 [metadata.files]
 anyio = [
@@ -924,8 +924,8 @@ typed-ast = [
     {file = "typed_ast-1.5.4.tar.gz", hash = "sha256:39e21ceb7388e4bb37f4c679d72707ed46c2fbf2a5609b8b8ebc4b067d977df2"},
 ]
 typer = [
-    {file = "typer-0.5.0-py3-none-any.whl", hash = "sha256:a34409c0029ba7e48cb9e4f54c6400bf4158a6145b5dea32788e7a36ebbcb312"},
-    {file = "typer-0.5.0.tar.gz", hash = "sha256:4c285a5585c94d32c305444af934f0078b6a8ba91464f3f85807c91cd499d195"},
+    {file = "typer-0.6.0-py3-none-any.whl", hash = "sha256:211be18a88cf2b4a3edbefa48e2eac2d6f590833252b51075464e72ac35192c2"},
+    {file = "typer-0.6.0.tar.gz", hash = "sha256:8cb0962ea9c9aa86f55f89add8fa50fba362645748e0af7bf26267a15637ab6d"},
 ]
 typing-extensions = [
     {file = "typing_extensions-4.2.0-py3-none-any.whl", hash = "sha256:6657594ee297170d19f67d55c05852a874e7eb634f4f753dbd667855e07c1708"},
