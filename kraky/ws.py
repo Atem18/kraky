@@ -53,6 +53,8 @@ class KrakyWsClient:
             ws_url = "wss://beta-ws.kraken.com"
         elif self.connection_env == "beta-auth":
             ws_url = "wss://beta-ws-auth.kraken.com"
+        else:
+            ws_url = "wss://ws.kraken.com"
         websocket = await websockets.connect(ws_url)
         self.connections[connection_name] = {}
         self.connections[connection_name]["websocket"] = websocket
