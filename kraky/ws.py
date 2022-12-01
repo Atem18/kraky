@@ -90,7 +90,8 @@ class KrakyWsClient:
                             await asyncio.wait_for(pong, timeout=ping_timeout)
                             self.logger.debug("Ping OK - keeping connection alive.")
                             continue
-                        except:
+                        except Exception as ex:
+                            self.logger.error(ex)
                             self.logger.debug(
                                 f"Ping error - retrying connection in {sleep_time} sec."
                             )
