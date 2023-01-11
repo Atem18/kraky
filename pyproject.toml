@@ -1,6 +1,6 @@
 [tool.poetry]
 name = "kraky"
-version = "2022.11.28"
+version = "2023.01.11"
 description = "Python client for Kraken API REST and Kraken Websockets API using httpx and websockets. Supports both sync and async for API REST."
 authors = ["Atem18 <contact@atemlire.io>"]
 license = "MIT"
