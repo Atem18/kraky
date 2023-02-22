@@ -2,10 +2,11 @@
 import base64
 import hashlib
 import hmac
-import urllib
+from urllib.parse import urlencode
 import time
 
 import httpx
+from httpx._utils import primitive_value_to_str
 from typing import Any
 
 from .log import get_module_logger
@@ -40,7 +41,16 @@ class KrakyApi:
         self.logger = get_module_logger(__name__, logging_level)
 
     def _sign_message(self, api_path: str, data: dict) -> str:
-        post_data = urllib.parse.urlencode(data)
+        # START
+        # Taken from Httpx httpx/_content.py#L140
+        plain_data = []
+        for key, value in data.items():
+            if isinstance(value, (list, tuple)):
+                plain_data.extend([(key, primitive_value_to_str(item)) for item in value])
+            else:
+                plain_data.append((key, primitive_value_to_str(value)))
+        # END
+        post_data = urlencode(plain_data)
         encoded = (str(data["nonce"]) + post_data).encode()
         message = api_path.encode() + hashlib.sha256(encoded).digest()
         signature = hmac.new(base64.b64decode(self.secret), message, hashlib.sha512)

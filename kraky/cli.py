@@ -1,7 +1,9 @@
+from dotenv import load_dotenv
 import typer
 
 from kraky import KrakyApiClient
 
+load_dotenv()
 
 app = typer.Typer()
 
