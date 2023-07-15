@@ -270,7 +270,7 @@ class KrakyWsClient:
     ) -> None:
         """https://docs.kraken.com/websockets/#message-addOrder"""
         data = {
-            sub("^close_(\w+)", r"close[\1]", arg): value
+            sub(r"^close_(\w+)", r"close[\1]", arg): value
             for arg, value in locals().items()
             if arg != "self" and arg != "connection_name" and value is not None
         }
