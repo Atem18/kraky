@@ -109,7 +109,10 @@ class KrakyWsClient:
         Arguments:
             connection_name: name of the connection you want to disconnect from
         """
-        if connection_name in self.connections:
+        if (
+            connection_name in self.connections and
+            "websocket" in self.connections[connection_name]
+        ):
             self.logger.debug(
                 "Closing websocket connection '%s'.", connection_name
             )
