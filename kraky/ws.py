@@ -31,9 +31,7 @@ class KrakyWsClient:
         self,
         handler: Callable,
         connection_name: str = "main",
-        reply_timeout: int = 10,
-        ping_timeout: int = 5,
-        sleep_time: int = 5,
+        sleep_time: int = 5
     ) -> None:
         """
         Main function to be called.
@@ -41,8 +39,6 @@ class KrakyWsClient:
         Arguments:
             handler: A function that will manage WS's messages
             connection_name: Give it a proper name to distinguish between the public and private WS
-            reply_timeout: Timeout after x seconds if no message on websocket
-            ping_timeout: Timeout after x seconds if no pong is received
             sleep_time: Reconnects after x seconds when connection is dropped
         """
         if self.connection_env == "production":
@@ -55,72 +51,56 @@ class KrakyWsClient:
             ws_url = "wss://beta-ws-auth.kraken.com"
         else:
             ws_url = "wss://ws.kraken.com"
-        websocket = await websockets.connect(ws_url)
         self.connections[connection_name] = {}
-        self.connections[connection_name]["websocket"] = websocket
+        self.connections[connection_name]["closed"] = False
         self.connections[connection_name]["subscriptions"] = []
-        while True:
+        async for websocket in websockets.connect(ws_url):
+            self.connections[connection_name]["websocket"] = websocket
             try:
-                if not websocket.open:
-                    websocket = await websockets.connect(ws_url)
-                    self.connections[connection_name]["websocket"] = websocket
-                    if self.connections[connection_name]["subscriptions"]:
-                        for subscription in self.connections[connection_name][
-                            "subscriptions"
-                        ]:
-                            await self.subscribe(
-                                subscription=subscription["subscription"],
-                                pair=subscription["pair"],
-                                connection_name=connection_name,
-                            )
-                else:
-                    try:
-                        message = await asyncio.wait_for(
-                            websocket.recv(), timeout=reply_timeout
-                        )
-                        if "errorMessage" in message:
-                            error = json.loads(message)
-                            self.logger.error(error["errorMessage"])
-                        else:
-                            data = json.loads(message)
-                            await handler(data)
-                    except asyncio.TimeoutError:
-                        try:
-                            pong = await websocket.ping()
-                            await asyncio.wait_for(pong, timeout=ping_timeout)
-                            self.logger.debug("Ping OK - keeping connection alive.")
-                            continue
-                        except Exception as ex:
-                            self.logger.error(ex)
-                            self.logger.debug(
-                                f"Ping error - retrying connection in {sleep_time} sec."
-                            )
-                            await asyncio.sleep(sleep_time)
-                            break
-            except socket.gaierror:
+                # If the subscription list is already populated for this
+                # connection at this point, this means the connection was
+                # re-established – thus we're resubscribing to be safe.
+                for subscription in self.connections[connection_name][
+                    "subscriptions"
+                ]:
+                    self.logger.debug(
+                        "Connection %s re-established - resubscribing %s.",
+                        connection_name, subscription
+                    )
+                    await self.subscribe(
+                        subscription=subscription["subscription"],
+                        pair=subscription["pair"],
+                        connection_name=connection_name,
+                    )
+                async for message in websocket:
+                    data = json.loads(message)
+                    if "errorMessage" in data:
+                        self.logger.error(data["errorMessage"])
+                    else:
+                        await handler(data)
+            except (
+                socket.gaierror,
+                websockets.exceptions.ConnectionClosed,
+                ConnectionResetError
+            ) as err:
                 self.logger.debug(
-                    f"Socket gaia error - retrying connection in {sleep_time} sec."
+                    "%s - retrying connection in %s sec.",
+                    type(err).__name__, sleep_time
                 )
                 await asyncio.sleep(sleep_time)
                 continue
-            except websockets.exceptions.ConnectionClosedError:
-                self.logger.debug(
-                    f"WebSockets connection closed error - retrying connection in {sleep_time} sec."
-                )
-                await asyncio.sleep(sleep_time)
-                continue
-            except websockets.exceptions.ConnectionClosedOK:
-                self.logger.debug(
-                    f"WebSockets connection closed ok - retrying connection in {sleep_time} sec."
-                )
-                await asyncio.sleep(sleep_time)
-                continue
-            except ConnectionResetError:
-                self.logger.debug(
-                    f"Connection reset error - retrying connection in {sleep_time} sec."
-                )
-                await asyncio.sleep(sleep_time)
-                continue
+            finally:
+                if (
+                    self.connections[connection_name]["websocket"].closed and
+                    self.connections[connection_name]["closed"]
+                ):
+                    self.logger.debug("Connection successfully closed.")
+                    break
+        del self.connections[connection_name]
+        self.logger.info(
+            "Connection '%s' closed and deleted, exiting connect coroutine.",
+            connection_name
+        )
 
     async def disconnect(self, connection_name: str = "main") -> None:
         """
@@ -129,37 +109,33 @@ class KrakyWsClient:
         Arguments:
             connection_name: name of the connection you want to disconnect from
         """
-        if self.connections[connection_name] is not None:
-            try:
-                await self.connections[connection_name]["websocket"].close()
-            except socket.gaierror:
-                self.logger.debug("Socket gaia error - disconnecting anyway.")
-            except websockets.exceptions.ConnectionClosedError:
-                self.logger.debug(
-                    "WebSockets connection closed error - disconnecting anyway."
-                )
-            except websockets.exceptions.ConnectionClosedOK:
-                self.logger.debug(
-                    "WebSockets connection closed ok - disconnecting anyway."
-                )
-            except ConnectionResetError:
-                self.logger.debug("Connection reset error - disconnecting anyway.")
-            del self.connections[connection_name]
+        if (
+            connection_name in self.connections and
+            "websocket" in self.connections[connection_name]
+        ):
+            self.logger.debug(
+                "Closing websocket connection '%s'.", connection_name
+            )
+            self.connections[connection_name]["closed"] = True
+            await self.connections[connection_name]["websocket"].close()
 
     async def _send(self, data: dict, connection_name: str = "main") -> None:
-        while connection_name not in self.connections:
+        while not (
+            connection_name in self.connections and
+            "websocket" in self.connections[connection_name]
+        ):
             await asyncio.sleep(0.1)
         try:
             await self.connections[connection_name]["websocket"].send(json.dumps(data))
             await asyncio.sleep(0.1)
-        except socket.gaierror:
-            self.logger.debug("Socket gaia error - message not sent.")
-        except websockets.exceptions.ConnectionClosedError:
-            self.logger.debug("WebSockets connection closed error - message not sent.")
-        except websockets.exceptions.ConnectionClosedOK:
-            self.logger.debug("WebSockets connection closed ok - message not sent.")
-        except ConnectionResetError:
-            self.logger.debug("Connection reset error - message not sent.")
+        except (
+            socket.gaierror,
+            websockets.exceptions.ConnectionClosed,
+            ConnectionResetError
+        ) as err:
+            self.logger.debug(
+                "%s - message not sent.", type(err).__name__
+            )
 
     async def ping(self, reqid: int = None, connection_name: str = "main") -> None:
         """
