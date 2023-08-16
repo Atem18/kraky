@@ -1,6 +1,6 @@
 [tool.poetry]
 name = "kraky"
-version = "2023.06.13"
+version = "2023.08.16"
 description = "Python client for Kraken API REST and Kraken Websockets API using httpx and websockets. Supports both sync and async for API REST."
 authors = ["Atem18 <contact@atemlire.io>"]
 license = "MIT"
@@ -11,7 +11,10 @@ keywords = ["asyncio", "httpx", "websockets", "kraken"]
 classifiers = [
     "License :: OSI Approved :: MIT License",
     "Programming Language :: Python :: 3",
-    "Programming Language :: Python :: 3.7",
+    "Programming Language :: Python :: 3.8",
+    "Programming Language :: Python :: 3.9",
+    "Programming Language :: Python :: 3.10",
+    "Programming Language :: Python :: 3.11",
 ]
 
 [tool.poetry.dependencies]
