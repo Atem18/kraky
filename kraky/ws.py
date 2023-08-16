@@ -3,11 +3,11 @@ import asyncio
 import json
 import socket
 from re import sub
-from typing import Callable
+from typing import Callable, Optional
 
 import websockets
 
-from .log import get_module_logger
+from kraky.log import get_module_logger
 
 
 class KrakyWsClient:
@@ -17,8 +17,6 @@ class KrakyWsClient:
         self, connection_env: str = "production", logging_level: str = "INFO"
     ) -> None:
         """
-        Initialize the object.
-
         Arguments:
             connection_env: https://docs.kraken.com/websockets/#connectionDetails
             logging_level: Change the log level
@@ -28,18 +26,15 @@ class KrakyWsClient:
         self.logger = get_module_logger(__name__, logging_level)
 
     async def connect(
-        self,
-        handler: Callable,
-        connection_name: str = "main",
-        sleep_time: int = 5
+        self, handler: Callable, connection_name: str = "main", sleep_time: int = 5
     ) -> None:
         """
-        Main function to be called.
+        Connect to the websocket and start the handler coroutine.
 
         Arguments:
-            handler: A function that will manage WS's messages
-            connection_name: Give it a proper name to distinguish between the public and private WS
-            sleep_time: Reconnects after x seconds when connection is dropped
+            handler: coroutine that will handle the incoming messages
+            connection_name: name of the connection you want to subscribe to
+            sleep_time: time to wait before retrying to connect
         """
         if self.connection_env == "production":
             ws_url = "wss://ws.kraken.com"
@@ -60,12 +55,11 @@ class KrakyWsClient:
                 # If the subscription list is already populated for this
                 # connection at this point, this means the connection was
                 # re-established – thus we're resubscribing to be safe.
-                for subscription in self.connections[connection_name][
-                    "subscriptions"
-                ]:
+                for subscription in self.connections[connection_name]["subscriptions"]:
                     self.logger.debug(
                         "Connection %s re-established - resubscribing %s.",
-                        connection_name, subscription
+                        connection_name,
+                        subscription,
                     )
                     await self.subscribe(
                         subscription=subscription["subscription"],
@@ -81,48 +75,48 @@ class KrakyWsClient:
             except (
                 socket.gaierror,
                 websockets.exceptions.ConnectionClosed,
-                ConnectionResetError
+                ConnectionResetError,
             ) as err:
                 self.logger.debug(
                     "%s - retrying connection in %s sec.",
-                    type(err).__name__, sleep_time
+                    type(err).__name__,
+                    sleep_time,
                 )
                 await asyncio.sleep(sleep_time)
                 continue
             finally:
                 if (
-                    self.connections[connection_name]["websocket"].closed and
-                    self.connections[connection_name]["closed"]
+                    self.connections[connection_name]["websocket"].closed
+                    and self.connections[connection_name]["closed"]
                 ):
                     self.logger.debug("Connection successfully closed.")
                     break
         del self.connections[connection_name]
         self.logger.info(
             "Connection '%s' closed and deleted, exiting connect coroutine.",
-            connection_name
+            connection_name,
         )
 
     async def disconnect(self, connection_name: str = "main") -> None:
         """
-        Function to be called when you want to disconnect from WS
+        Close the websocket connection.
 
         Arguments:
-            connection_name: name of the connection you want to disconnect from
+            connection_name: name of the connection you want to subscribe to
         """
         if (
-            connection_name in self.connections and
-            "websocket" in self.connections[connection_name]
+            connection_name in self.connections
+            and "websocket" in self.connections[connection_name]
         ):
-            self.logger.debug(
-                "Closing websocket connection '%s'.", connection_name
-            )
+            self.logger.debug("Closing websocket connection '%s'.", connection_name)
             self.connections[connection_name]["closed"] = True
             await self.connections[connection_name]["websocket"].close()
 
     async def _send(self, data: dict, connection_name: str = "main") -> None:
+        """Internal function to send data to WS"""
         while not (
-            connection_name in self.connections and
-            "websocket" in self.connections[connection_name]
+            connection_name in self.connections
+            and "websocket" in self.connections[connection_name]
         ):
             await asyncio.sleep(0.1)
         try:
@@ -131,20 +125,20 @@ class KrakyWsClient:
         except (
             socket.gaierror,
             websockets.exceptions.ConnectionClosed,
-            ConnectionResetError
+            ConnectionResetError,
         ) as err:
-            self.logger.debug(
-                "%s - message not sent.", type(err).__name__
-            )
+            self.logger.debug("%s - message not sent.", type(err).__name__)
 
-    async def ping(self, reqid: int = None, connection_name: str = "main") -> None:
+    async def ping(
+        self, reqid: Optional[int] = None, connection_name: str = "main"
+    ) -> None:
         """
         https://docs.kraken.com/websockets/#message-ping
         https://docs.kraken.com/websockets/#message-pong
 
         Arguments:
-            requid: Optional - client originated ID reflected in response message
-            connection_name: Name of the connection you want to ping
+            reqid: Optional - client originated ID reflected in response message
+            connection_name: name of the connection you want to subscribe to
         """
         data: dict = {}
         data["event"] = "ping"
@@ -156,10 +150,19 @@ class KrakyWsClient:
         self,
         event: str,
         subscription: dict,
-        pair: list = None,
-        reqid: int = None,
+        pair: Optional[list] = None,
+        reqid: Optional[int] = None,
         connection_name: str = "main",
     ) -> None:
+        """
+        Internal function to subscribe or unsubscribe to a topic on a single or multiple currency pairs.
+        Arguments:
+            event: subscribe or unsubscribe
+            subscription: Subscribe to a topic on a single or multiple currency pairs.
+            pair: Optional - Array of currency pairs. Format of each pair is "A/B", where A and B are ISO 4217-A3 for standardized assets and popular unique symbol if not standardized.
+            reqid: Optional - client originated ID reflected in response message
+            connection_name: name of the connection you want to subscribe to
+        """
         data: dict = {
             "event": event,
             "subscription": subscription,
@@ -173,8 +176,8 @@ class KrakyWsClient:
     async def subscribe(
         self,
         subscription: dict,
-        pair: list = None,
-        reqid: int = None,
+        pair: Optional[list] = None,
+        reqid: Optional[int] = None,
         connection_name: str = "main",
     ) -> None:
         """
@@ -200,15 +203,15 @@ class KrakyWsClient:
     async def unsubscribe(
         self,
         subscription: dict,
-        pair: list = None,
-        reqid: int = None,
+        pair: Optional[list] = None,
+        reqid: Optional[int] = None,
         connection_name: str = "main",
     ) -> None:
         """
         https://docs.kraken.com/websockets/#message-subscribe
 
         Arguments:
-            subscription: Subscribe to a topic on a single or multiple currency pairs.
+            subscription: Unsubscribe from a topic on a single or multiple currency pairs.
             pair: Optional - Array of currency pairs. Format of each pair is "A/B", where A and B are ISO 4217-A3 for standardized assets and popular unique symbol if not standardized.
             reqid: Optional - client originated ID reflected in response message
             connection_name: name of the connection you want to subscribe to
@@ -228,23 +231,128 @@ class KrakyWsClient:
         type: str,
         ordertype: str,
         volume: float,
-        price: float = None,
-        price2: float = None,
-        leverage: float = None,
-        oflags: str = None,
-        starttm: str = None,
-        expiretm: str = None,
-        userref: str = None,
-        validate: str = None,
-        close_ordertype: str = None,
-        close_price: float = None,
-        close_price2: float = None,
-        trading_agreement: str = None,
-        reqid: int = None,
+        price: Optional[float] = None,
+        price2: Optional[float] = None,
+        leverage: Optional[float] = None,
+        reduce_only: Optional[bool] = None,
+        oflags: Optional[str] = None,
+        starttm: Optional[str] = None,
+        expiretm: Optional[str] = None,
+        userref: Optional[str] = None,
+        validate: Optional[str] = None,
+        close_ordertype: Optional[str] = None,
+        close_price: Optional[float] = None,
+        close_price2: Optional[float] = None,
+        timeinforce: Optional[str] = None,
+        reqid: Optional[int] = None,
         event: str = "addOrder",
         connection_name: str = "main",
     ) -> None:
-        """https://docs.kraken.com/websockets/#message-addOrder"""
+        """
+        https://docs.kraken.com/websockets/#message-addOrder
+
+        Arguments:
+            token: Authentication token
+            pair: Asset pair
+            type: Type of order (buy/sell)
+            ordertype: Order type:
+                market
+                limit (price = limit price)
+                stop-loss (price = stop loss price)
+                take-profit (price = take profit price)
+                stop-loss-profit (price = stop loss price, price2 = take profit price)
+                stop-loss-profit-limit (price = stop loss price, price2 = take profit price)
+                stop-loss-limit (price = stop loss trigger price, price2 = triggered limit price)
+                take-profit-limit (price = take profit trigger price, price2 = triggered limit price)
+                trailing-stop (price = trailing stop offset)
+                trailing-stop-limit (price = trailing stop offset, price2 = triggered limit offset)
+                stop-loss-and-limit (price = stop loss price, price2 = limit price)
+                settle-position
+            volume: Order volume in lots
+            price: Price (optional.  dependent upon ordertype)
+            price2: Secondary price (optional.  dependent upon ordertype)
+            leverage: Amount of leverage desired (optional.  default = none)
+            reduce_only: Indicates that the order should only reduce an existing position (optional.  default = false)
+            oflags: Comma delimited list of order flags (optional):
+                viqc = volume in quote currency (not available for leveraged orders)
+                fcib = prefer fee in base currency
+                fciq = prefer fee in quote currency
+                nompp = no market price protection
+                post = post only order (available when ordertype = limit)
+            starttm: Scheduled start time (optional):
+                0 = now (default)
+                +<n> = schedule start time <n> seconds from now
+                <n> = unix timestamp of start time
+            expiretm: Expiration time (optional):
+                0 = no expiration (default)
+                +<n> = expire <n> seconds from now
+                <n> = unix timestamp of expiration time
+            userref: User reference id.  32-bit signed number.  (optional)
+            validate: Validate inputs only.  do not submit order (optional)
+            close_ordertype: Order type:
+                limit (price = limit price)
+                stop-loss (price = stop loss price)
+                take-profit (price = take profit price)
+                stop-loss-profit (price = stop loss price, price2 = take profit price)
+                stop-loss-profit-limit (price = stop loss price, price2 = take profit price)
+                stop-loss-limit (price = stop loss trigger price, price2 = triggered limit price)
+                take-profit-limit (price = take profit trigger price, price2 = triggered limit price)
+                trailing-stop (price = trailing stop offset)
+                trailing-stop-limit (price = trailing stop offset, price2 = triggered limit offset)
+                stop-loss-and-limit (price = stop loss price, price2 = limit price)
+                settle-position
+            close_price: Secondary price (optional.  dependent upon ordertype)
+            close_price2: Secondary price (optional.  dependent upon ordertype)
+            timeinforce: Time in force.  (optional)
+                GTC = Good till cancelled (default)
+                IOC = Immediate or cancel
+                FOK = Fill or kill
+            reqid: Optional - client originated ID reflected in response message
+            connection_name: name of the connection you want to subscribe to
+        """
+        data = {
+            sub(r"^close_(\w+)", r"close[\1]", arg): value
+            for arg, value in locals().items()
+            if arg != "self" and arg != "connection_name" and value is not None
+        }
+        await self._send(data=data, connection_name=connection_name)
+
+    async def edit_order(
+        self,
+        token: str,
+        orderid: list,
+        pair: str,
+        volume: float,
+        price: Optional[float] = None,
+        price2: Optional[float] = None,
+        oflags: Optional[str] = None,
+        newuserref: Optional[str] = None,
+        validate: Optional[str] = None,
+        reqid: Optional[int] = None,
+        event: str = "editOrder",
+        connection_name: str = "main",
+    ):
+        """
+        https://docs.kraken.com/websockets/#message-editOrder
+
+        Arguments:
+            token: Authentication token
+            orderid: Order id
+            pair: Asset pair
+            volume: Order volume in lots
+            price: Price (optional.  dependent upon ordertype)
+            price2: Secondary price (optional.  dependent upon ordertype)
+            oflags: Comma delimited list of order flags (optional):
+                viqc = volume in quote currency (not available for leveraged orders)
+                fcib = prefer fee in base currency
+                fciq = prefer fee in quote currency
+                nompp = no market price protection
+                post = post only order (available when ordertype = limit)
+            newuserref: Updated user reference id.  32-bit signed number.  (optional)
+            validate: Validate inputs only.  do not submit order (optional)
+            reqid: Optional - client originated ID reflected in response message
+            connection_name: name of the connection you want to subscribe to
+        """
         data = {
             sub(r"^close_(\w+)", r"close[\1]", arg): value
             for arg, value in locals().items()
@@ -256,11 +364,19 @@ class KrakyWsClient:
         self,
         token: str,
         txid: list,
-        reqid: int = None,
+        reqid: Optional[int] = None,
         event: str = "cancelOrder",
         connection_name: str = "main",
     ) -> None:
-        """https://docs.kraken.com/websockets/#message-cancelOrder"""
+        """
+        https://docs.kraken.com/websockets/#message-cancelOrder
+
+        Arguments:
+            token: Authentication token
+            txid: Transaction id
+            reqid: Optional - client originated ID reflected in response message
+            connection_name: name of the connection you want to subscribe to
+        """
         data = {
             arg: value
             for arg, value in locals().items()
@@ -271,11 +387,18 @@ class KrakyWsClient:
     async def cancel_all(
         self,
         token: str,
-        reqid: int = None,
+        reqid: Optional[int] = None,
         event: str = "cancelAll",
         connection_name: str = "main",
     ) -> None:
-        """https://docs.kraken.com/websockets/#message-cancelAll"""
+        """
+        https://docs.kraken.com/websockets/#message-cancelAll
+
+        Arguments:
+            token: Authentication token
+            reqid: Optional - client originated ID reflected in response message
+            connection_name: name of the connection you want to subscribe to
+        """
         data = {
             arg: value
             for arg, value in locals().items()
@@ -287,11 +410,19 @@ class KrakyWsClient:
         self,
         token: str,
         timeout: int,
-        reqid: int = None,
+        reqid: Optional[int] = None,
         event: str = "cancelAllOrdersAfter",
         connection_name: str = "main",
     ) -> None:
-        """https://docs.kraken.com/websockets/#message-cancelAllOrdersAfter"""
+        """
+        https://docs.kraken.com/websockets/#message-cancelAllOrdersAfter
+
+        Arguments:
+            token: Authentication token
+            timeout: Timeout in seconds. 0 = cancel timer (optional)
+            reqid: Optional - client originated ID reflected in response message
+            connection_name: name of the connection you want to subscribe to
+        """
         data = {
             arg: value
             for arg, value in locals().items()
