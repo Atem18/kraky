@@ -20,7 +20,9 @@ class KrakyWsClient:
         Initialize the object.
 
         Arguments:
-            connection_env: https://docs.kraken.com/websockets/#connectionDetails
+            connection_env: Predefined environment strings (production[-auth] and beta[-auth])
+                will be mapped to the corresponding URLs, otherwise the string is
+                taken as it is as target URL. https://docs.kraken.com/websockets/#connectionDetails
             logging_level: Change the log level
         """
         self.connection_env = connection_env
@@ -50,7 +52,7 @@ class KrakyWsClient:
         elif self.connection_env == "beta-auth":
             ws_url = "wss://beta-ws-auth.kraken.com"
         else:
-            ws_url = "wss://ws.kraken.com"
+            ws_url = self.connection_env
         self.connections[connection_name] = {}
         self.connections[connection_name]["closed"] = False
         self.connections[connection_name]["subscriptions"] = []
