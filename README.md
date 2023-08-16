@@ -145,7 +145,7 @@ if __name__ == "__main__":
 
 ## Compatibility
 
-- Python 3.7 and above
+- Python 3.8 and above
 
 ## Licence
 
