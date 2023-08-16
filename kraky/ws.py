@@ -98,6 +98,7 @@ class KrakyWsClient:
                 ):
                     self.logger.debug("Connection successfully closed.")
                     break
+                continue
         del self.connections[connection_name]
         self.logger.info(
             "Connection '%s' closed and deleted, exiting connect coroutine.",
