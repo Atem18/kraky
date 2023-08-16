@@ -6,17 +6,15 @@ jobs:
     runs-on: ubuntu-20.04
     strategy:
       matrix:
-        python: ["3.7", "3.8", "3.9", "3.10", "3.11"]
+        python: ["3.8", "3.9", "3.10", "3.11"]
     steps:
       - name: Checkout
-        uses: actions/checkout@v3.3.0
+        uses: actions/checkout@v3.5.3
       - name: Set up Python
         uses: actions/setup-python@v4
         with:
           python-version: ${{ matrix.python }}
-      - name: Install Poetry
-        run: python -m pip install poetry --user
-      - name: Install dev dependencies
-        run: poetry install
+      - name: Install test dependencies
+        run: pip install -r requirements/test-requirements.txt
       - name: Run Tox
-        run: poetry run tox -e py
+        run: tox -e py

@@ -1,9 +1,13 @@
-[tool.poetry]
+[build-system]
+requires = ["hatchling"]
+build-backend = "hatchling.build"
+
+[project]
 name = "kraky"
 version = "2023.08.16"
 description = "Python client for Kraken API REST and Kraken Websockets API using httpx and websockets. Supports both sync and async for API REST."
-authors = ["Atem18 <contact@atemlire.io>"]
-license = "MIT"
+authors = [{ name = "Atem18", email = "contact@atemlire.io" }]
+license = { file = "LICENSE" }
 readme = "README.md"
 homepage = "https://kraky.readthedocs.io/en/latest"
 repository = "https://github.com/Atem18/kraky"
@@ -17,26 +21,21 @@ classifiers = [
     "Programming Language :: Python :: 3.11",
 ]
 
-[tool.poetry.dependencies]
-python = "^3.8"
-httpx = ">=0.23.3,<0.25.0"
-websockets = ">=10.4,<12.0"
-typer = {extras = ["all"], version = ">=0.7,<0.10"}
-python-dotenv = ">=0.21.1,<1.1.0"
+dependencies = [
+    "httpx >=0.23.3,<0.25.0",
+    "websockets >=10.4,<12.0",
+    "typer >=0.7,<0.10",
+    "python-dotenv >=0.21.1,<1.1.0",
+]
 
-[tool.poetry.scripts]
+[project.optional-dependencies]
+dev = ["pre-commit >=2.17.0,<4.0.0", "ruff == 0.0.284", "mypy == 1.5.0"]
+
+doc = ["mkdocs == 1.5.2", "mkdocs-material == 9.1.21", "mkdocstrings == 0.22.0"]
+
+test = ["pytest == 7.4.0", "tox == 4.7.0"]
+
+build = ["hatch == 1.7.0"]
+
+[project.scripts]
 kraky = 'kraky.cli:app'
-
-[tool.poetry.group.dev.dependencies]
-pytest = "^7.4.0"
-pytest-asyncio = ">=0.20,<0.22"
-mkdocs = "^1.5.2"
-mkdocs-material = "^9.1.21"
-mkdocstrings = {extras = ["python"], version = "^0.22.0"}
-black = "^23.7.0"
-tox = "^4.9.0"
-pre-commit = "^3.3.3"
-
-[build-system]
-requires = ["poetry-core>=1.0.0"]
-build-backend = "poetry.core.masonry.api"
