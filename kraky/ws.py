@@ -128,14 +128,14 @@ class KrakyWsClient:
         try:
             await self.connections[connection_name]["websocket"].send(json.dumps(data))
             await asyncio.sleep(0.1)
-        except socket.gaierror:
-            self.logger.debug("Socket gaia error - message not sent.")
-        except websockets.exceptions.ConnectionClosed as err:
-            self.logger.debug("WebSockets connection closed error - message not sent.")
-        except websockets.exceptions.ConnectionClosedOK:
-            self.logger.debug("WebSockets connection closed ok - message not sent.")
-        except ConnectionResetError:
-            self.logger.debug("Connection reset error - message not sent.")
+        except (
+            socket.gaierror,
+            websockets.exceptions.ConnectionClosed,
+            ConnectionResetError
+        ) as err:
+            self.logger.debug(
+                "%s - message not sent.", type(err).__name__
+            )
 
     async def ping(self, reqid: int = None, connection_name: str = "main") -> None:
         """
