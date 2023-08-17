@@ -4,7 +4,7 @@ build-backend = "hatchling.build"
 
 [project]
 name = "kraky"
-version = "2023.08.16"
+version = "2023.08.17"
 description = "Python client for Kraken API REST and Kraken Websockets API using httpx and websockets. Supports both sync and async for API REST."
 authors = [{ name = "Atem18", email = "contact@atemlire.io" }]
 license = { file = "LICENSE" }
