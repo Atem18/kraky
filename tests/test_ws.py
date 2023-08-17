@@ -14,19 +14,6 @@ def test_client(ws_url):
 
 
 @pytest.mark.asyncio
-async def test_connect(ws_handler, ws_host, ws_port, ws_url):
-    async with websockets.serve(ws_handler, ws_host, ws_port):
-        wsc = KrakyWsClient(connection_env=ws_url)
-        asyncio.create_task(
-            wsc.connect(None)
-        )
-        await asyncio.sleep(1)
-        assert "main" in wsc.connections
-        assert "websocket" in wsc.connections["main"]
-        assert wsc.connections["main"]["websocket"].open
-
-
-@pytest.mark.asyncio
 async def test_send(ws_handler, ws_host, ws_port, ws_url):
     async with websockets.serve(ws_handler, ws_host, ws_port):
         wsc = KrakyWsClient(connection_env=ws_url)
@@ -42,10 +29,11 @@ async def test_send(ws_handler, ws_host, ws_port, ws_url):
         assert "main" in wsc.connections
         assert "websocket" in wsc.connections["main"]
         assert wsc.connections["main"]["websocket"].open
+        await wsc.disconnect()
 
 
 @pytest.mark.asyncio
-async def test_disconnect(ws_handler, ws_host, ws_port, ws_url):
+async def test_connect_disconnect(ws_handler, ws_host, ws_port, ws_url):
     async with websockets.serve(ws_handler, ws_host, ws_port):
         wsc = KrakyWsClient(connection_env=ws_url)
         asyncio.create_task(
@@ -58,7 +46,6 @@ async def test_disconnect(ws_handler, ws_host, ws_port, ws_url):
         await wsc.disconnect()
         await asyncio.sleep(1)
         assert "main" not in wsc.connections
-        assert wsc
 
 
 @pytest.mark.asyncio
@@ -85,6 +72,7 @@ async def test_subscribe(ws_handler, ws_host, ws_port, ws_url):
         assert wsc.connections["main"]["subscriptions"]
         assert wsc.connections["main"]["subscriptions"][-1] == exp_sub
         assert pytest.last_ws_msg == exp_sub
+        await wsc.disconnect()
 
 
 @pytest.mark.asyncio
@@ -117,3 +105,4 @@ async def test_unsubscribe(ws_handler, ws_host, ws_port, ws_url):
             'pair': ['XBT/USD', 'ETH/USD']
         }
         assert pytest.last_ws_msg == exp_unsub
+        await wsc.disconnect()
