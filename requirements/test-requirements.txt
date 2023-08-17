@@ -56,6 +56,10 @@ pluggy==1.2.0
 pyproject-api==1.5.3
     # via tox
 pytest==7.4.0
+    # via
+    #   kraky (pyproject.toml)
+    #   pytest-asyncio
+pytest-asyncio==0.21.1
     # via kraky (pyproject.toml)
 python-dotenv==1.0.0
     # via kraky (pyproject.toml)
