@@ -10,7 +10,7 @@ certifi==2023.7.22
     # via
     #   httpcore
     #   httpx
-click==8.1.6
+click==8.1.7
     # via typer
 exceptiongroup==1.1.3
     # via anyio
