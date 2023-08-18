@@ -53,7 +53,7 @@ pluggy==1.2.0
     # via
     #   pytest
     #   tox
-pyproject-api==1.5.3
+pyproject-api==1.5.4
     # via tox
 pytest==7.4.0
     # via
