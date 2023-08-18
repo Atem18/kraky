@@ -14,7 +14,7 @@ certifi==2023.7.22
     #   httpx
 chardet==5.2.0
     # via tox
-click==8.1.6
+click==8.1.7
     # via typer
 colorama==0.4.6
     # via tox
