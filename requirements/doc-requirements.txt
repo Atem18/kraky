@@ -23,7 +23,7 @@ colorama==0.4.6
     #   mkdocs-material
 ghp-import==2.1.0
     # via mkdocs
-griffe==0.34.0
+griffe==0.35.0
     # via mkdocstrings-python
 h11==0.14.0
     # via httpcore
