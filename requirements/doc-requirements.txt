@@ -71,7 +71,7 @@ mkdocstrings==0.22.0
     # via
     #   kraky (pyproject.toml)
     #   mkdocstrings-python
-mkdocstrings-python==1.4.0
+mkdocstrings-python==1.5.2
     # via kraky (pyproject.toml)
 packaging==23.1
     # via mkdocs
