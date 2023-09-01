@@ -107,7 +107,7 @@ typing-extensions==4.7.1
     # via typer
 userpath==1.9.0
     # via hatch
-virtualenv==20.24.3
+virtualenv==20.24.4
     # via hatch
 websockets==11.0.3
     # via kraky (pyproject.toml)
