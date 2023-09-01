@@ -4,7 +4,7 @@
 #
 #    pip-compile --extra=test --output-file=requirements/test-requirements.txt pyproject.toml
 #
-anyio==3.7.1
+anyio==4.0.0
     # via httpcore
 cachetools==5.3.1
     # via tox
