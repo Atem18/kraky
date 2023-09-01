@@ -57,7 +57,7 @@ typing-extensions==4.7.1
     # via
     #   mypy
     #   typer
-virtualenv==20.24.3
+virtualenv==20.24.4
     # via pre-commit
 websockets==11.0.3
     # via kraky (pyproject.toml)
