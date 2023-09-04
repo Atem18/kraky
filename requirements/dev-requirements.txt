@@ -38,7 +38,7 @@ nodeenv==1.8.0
     # via pre-commit
 platformdirs==3.10.0
     # via virtualenv
-pre-commit==3.3.3
+pre-commit==3.4.0
     # via kraky (pyproject.toml)
 python-dotenv==1.0.0
     # via kraky (pyproject.toml)
