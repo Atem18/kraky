@@ -38,7 +38,7 @@ doc = [
     "mkdocstrings-python == 1.6.0",
 ]
 
-test = ["pytest == 7.4.0", "pytest-asyncio == 0.21.1", "tox == 4.11.1"]
+test = ["pytest == 7.4.2", "pytest-asyncio == 0.21.1", "tox == 4.11.1"]
 
 build = ["hatch == 1.7.0"]
 
