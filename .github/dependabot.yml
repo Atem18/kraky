@@ -4,13 +4,9 @@ updates:
   - package-ecosystem: "pip"
     directory: "/"
     schedule:
-      interval: "weekly"
-      day: "friday"
-    open-pull-requests-limit: 100
+      interval: "daily"
 
   - package-ecosystem: "github-actions"
     directory: "/"
     schedule:
-      interval: "weekly"
-      day: "friday"
-    open-pull-requests-limit: 100
+      interval: "daily"
