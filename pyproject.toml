@@ -22,14 +22,14 @@ classifiers = [
 ]
 
 dependencies = [
-    "httpx >=0.23.3,<0.25.0",
-    "websockets >=10.4,<12.0",
-    "typer >=0.7,<0.10",
-    "python-dotenv >=0.21.1,<1.1.0",
+    "httpx == 0.25.0",
+    "websockets == 11.0.3",
+    "typer == 0.9.0",
+    "python-dotenv == 1.0.0",
 ]
 
 [project.optional-dependencies]
-dev = ["pre-commit >=2.17.0,<4.0.0", "ruff == 0.0.287", "mypy == 1.5.1"]
+dev = ["pre-commit == 3.4.0", "ruff == 0.0.287", "mypy == 1.5.1"]
 
 doc = [
     "mkdocs == 1.5.2",
