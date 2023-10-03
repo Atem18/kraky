@@ -24,7 +24,7 @@ httpcore==0.17.3
     # via httpx
 httpx==0.24.1
     # via kraky (pyproject.toml)
-identify==2.5.28
+identify==2.5.30
     # via pre-commit
 idna==3.4
     # via
