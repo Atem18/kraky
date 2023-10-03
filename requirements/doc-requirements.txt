@@ -67,7 +67,7 @@ markupsafe==2.1.3
     #   mkdocstrings
 mergedeep==1.3.4
     # via mkdocs
-mkdocs==1.5.2
+mkdocs==1.5.3
     # via
     #   kraky (pyproject.toml)
     #   mkdocs-autorefs
