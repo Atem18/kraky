@@ -20,7 +20,7 @@ filelock==3.12.4
     # via virtualenv
 h11==0.14.0
     # via httpcore
-httpcore==0.17.3
+httpcore==0.18.0
     # via httpx
 httpx==0.24.1
     # via kraky (pyproject.toml)
