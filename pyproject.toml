@@ -33,7 +33,7 @@ dev = ["pre-commit == 3.4.0", "ruff == 0.0.292", "mypy == 1.5.1"]
 
 doc = [
     "mkdocs == 1.5.3",
-    "mkdocs-material == 9.3.1",
+    "mkdocs-material == 9.4.4",
     "mkdocstrings == 0.23.0",
     "mkdocstrings-python == 1.7.1",
 ]
