@@ -36,7 +36,7 @@ idna==3.4
     #   httpx
 iniconfig==2.0.0
     # via pytest
-packaging==23.1
+packaging==23.2
     # via
     #   pyproject-api
     #   pytest
