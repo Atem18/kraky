@@ -85,7 +85,7 @@ mkdocstrings==0.23.0
     #   mkdocstrings-python
 mkdocstrings-python==1.7.1
     # via kraky (pyproject.toml)
-packaging==23.1
+packaging==23.2
     # via mkdocs
 paginate==0.5.6
     # via mkdocs-material
