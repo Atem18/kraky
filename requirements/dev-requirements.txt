@@ -30,7 +30,7 @@ idna==3.4
     # via
     #   anyio
     #   httpx
-mypy==1.5.1
+mypy==1.6.0
     # via kraky (pyproject.toml)
 mypy-extensions==1.0.0
     # via mypy
