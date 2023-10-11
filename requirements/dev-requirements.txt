@@ -36,7 +36,7 @@ mypy-extensions==1.0.0
     # via mypy
 nodeenv==1.8.0
     # via pre-commit
-platformdirs==3.10.0
+platformdirs==3.11.0
     # via virtualenv
 pre-commit==3.4.0
     # via kraky (pyproject.toml)
