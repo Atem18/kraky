@@ -35,7 +35,7 @@ doc = [
     "mkdocs == 1.5.3",
     "mkdocs-material == 9.4.5",
     "mkdocstrings == 0.23.0",
-    "mkdocstrings-python == 1.7.3",
+    "mkdocstrings-python == 1.7.4",
 ]
 
 test = ["pytest == 7.4.3", "pytest-asyncio == 0.21.1", "tox == 4.11.3"]
