@@ -22,7 +22,7 @@ classifiers = [
 ]
 
 dependencies = [
-    "httpx == 0.25.0",
+    "httpx == 0.25.1",
     "websockets == 12.0",
     "typer == 0.9.0",
     "python-dotenv == 1.0.0",
