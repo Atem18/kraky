@@ -135,5 +135,5 @@ urllib3==2.0.7
     # via requests
 watchdog==3.0.0
     # via mkdocs
-websockets==11.0.3
+websockets==12.0
     # via kraky (pyproject.toml)
