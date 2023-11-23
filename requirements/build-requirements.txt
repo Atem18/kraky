@@ -31,7 +31,7 @@ hatch==1.7.0
     # via kraky (pyproject.toml)
 hatchling==1.18.0
     # via hatch
-httpcore==0.17.3
+httpcore==1.0.2
     # via httpx
 httpx==0.25.1
     # via
