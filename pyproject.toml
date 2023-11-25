@@ -29,7 +29,7 @@ dependencies = [
 ]
 
 [project.optional-dependencies]
-dev = ["pre-commit == 3.5.0", "ruff == 0.1.3", "mypy == 1.6.1"]
+dev = ["pre-commit == 3.5.0", "ruff == 0.1.3", "mypy == 1.7.1"]
 
 doc = [
     "mkdocs == 1.5.3",
