@@ -84,7 +84,7 @@ pyperclip==1.8.2
     # via hatch
 python-dotenv==1.0.0
     # via kraky (pyproject.toml)
-rich==13.6.0
+rich==13.7.0
     # via hatch
 secretstorage==3.3.3
     # via keyring
