@@ -6,7 +6,7 @@
 #
 anyio==4.1.0
     # via httpcore
-babel==2.13.0
+babel==2.13.1
     # via mkdocs-material
 beautifulsoup4==4.12.2
     # via readtime
