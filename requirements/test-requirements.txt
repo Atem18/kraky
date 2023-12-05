@@ -70,7 +70,7 @@ typer==0.9.0
     # via kraky (pyproject.toml)
 typing-extensions==4.8.0
     # via typer
-virtualenv==20.24.7
+virtualenv==20.25.0
     # via tox
 websockets==12.0
     # via kraky (pyproject.toml)
