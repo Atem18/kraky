@@ -64,7 +64,7 @@ packaging==23.2
     # via
     #   hatch
     #   hatchling
-pathspec==0.11.2
+pathspec==0.12.1
     # via hatchling
 pexpect==4.9.0
     # via hatch
