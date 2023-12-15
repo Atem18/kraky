@@ -40,7 +40,7 @@ doc = [
 
 test = ["pytest == 7.4.3", "pytest-asyncio == 0.23.2", "tox == 4.11.4"]
 
-build = ["hatch == 1.7.0"]
+build = ["hatch == 1.8.1"]
 
 [project.scripts]
 kraky = 'kraky.cli:app'
