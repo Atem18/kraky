@@ -31,7 +31,7 @@ sniffio==1.3.0
     #   httpx
 typer==0.9.0
     # via kraky (pyproject.toml)
-typing-extensions==4.8.0
+typing-extensions==4.9.0
     # via typer
 websockets==12.0
     # via kraky (pyproject.toml)
