@@ -18,7 +18,7 @@ click==8.1.7
     # via typer
 colorama==0.4.6
     # via tox
-distlib==0.3.7
+distlib==0.3.8
     # via virtualenv
 filelock==3.13.1
     # via
