@@ -51,7 +51,7 @@ pluggy==1.3.0
     #   tox
 pyproject-api==1.6.1
     # via tox
-pytest==7.4.3
+pytest==7.4.4
     # via
     #   kraky (pyproject.toml)
     #   pytest-asyncio
