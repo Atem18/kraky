@@ -8,7 +8,7 @@ anyio==4.2.0
     # via httpcore
 babel==2.14.0
     # via mkdocs-material
-beautifulsoup4==4.12.2
+beautifulsoup4==4.12.3
     # via readtime
 certifi==2023.11.17
     # via
