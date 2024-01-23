@@ -82,7 +82,7 @@ pygments==2.17.2
     # via rich
 pyperclip==1.8.2
     # via hatch
-python-dotenv==1.0.0
+python-dotenv==1.0.1
     # via kraky (pyproject.toml)
 rich==13.7.0
     # via hatch
