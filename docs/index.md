@@ -1,7 +1,7 @@
 # Kraky
 Python asyncio client for Kraken API REST and Kraken Websockets API using httpx and websockets
 
-## Installation 
+## Installation
     pip install kraky
 
 ## Docs
@@ -40,7 +40,7 @@ Python asyncio client for Kraken API REST and Kraken Websockets API using httpx 
 
     async def public_handler(self, response):
         print(response)
-    
+
     async def private_handler(self, response):
         print(response)
 
