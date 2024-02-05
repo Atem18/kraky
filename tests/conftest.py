@@ -2,6 +2,7 @@ import json
 import pytest
 from typing import Callable
 
+
 async def _ws_handler(websocket) -> None:
     global last_ws_msg
     async for message in websocket:
