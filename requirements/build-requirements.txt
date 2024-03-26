@@ -111,5 +111,5 @@ virtualenv==20.25.1
     # via hatch
 websockets==12.0
     # via kraky (pyproject.toml)
-zipp==3.17.0
+zipp==3.18.1
     # via importlib-metadata
