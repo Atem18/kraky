@@ -101,7 +101,7 @@ pymdown-extensions==10.7
     #   mkdocstrings
 pyquery==2.0.0
     # via readtime
-python-dateutil==2.8.2
+python-dateutil==2.9.0.post0
     # via ghp-import
 python-dotenv==1.0.1
     # via kraky (pyproject.toml)
