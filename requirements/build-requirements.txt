@@ -76,7 +76,7 @@ pluggy==1.4.0
     # via hatchling
 ptyprocess==0.7.0
     # via pexpect
-pycparser==2.21
+pycparser==2.22
     # via cffi
 pygments==2.17.2
     # via rich
