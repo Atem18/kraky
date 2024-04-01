@@ -105,7 +105,7 @@ typer==0.10.0
     # via kraky (pyproject.toml)
 typing-extensions==4.9.0
     # via typer
-userpath==1.9.1
+userpath==1.9.2
     # via hatch
 virtualenv==20.25.1
     # via hatch
