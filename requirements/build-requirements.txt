@@ -46,7 +46,7 @@ idna==3.6
     #   hyperlink
 importlib-metadata==7.0.1
     # via keyring
-jaraco-classes==3.3.0
+jaraco-classes==3.4.0
     # via keyring
 jeepney==0.8.0
     # via
