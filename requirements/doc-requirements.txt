@@ -51,7 +51,7 @@ lxml==5.1.0
     # via
     #   mkdocs-material
     #   pyquery
-markdown==3.5.2
+markdown==3.6
     # via
     #   mkdocs
     #   mkdocs-autorefs
