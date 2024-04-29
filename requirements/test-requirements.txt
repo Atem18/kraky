@@ -68,7 +68,7 @@ tox==4.12.1
     # via kraky (pyproject.toml)
 typer==0.12.3
     # via kraky (pyproject.toml)
-typing-extensions==4.9.0
+typing-extensions==4.11.0
     # via typer
 virtualenv==20.25.3
     # via tox
