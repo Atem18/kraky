@@ -99,7 +99,7 @@ tomli-w==1.0.0
     # via hatch
 tomlkit==0.12.4
     # via hatch
-trove-classifiers==2024.2.23
+trove-classifiers==2024.4.10
     # via hatchling
 typer==0.12.3
     # via kraky (pyproject.toml)
