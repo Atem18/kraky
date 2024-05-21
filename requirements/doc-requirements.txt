@@ -116,7 +116,7 @@ readtime==3.0.0
     # via mkdocs-material
 regex==2023.12.25
     # via mkdocs-material
-requests==2.31.0
+requests==2.32.0
     # via mkdocs-material
 six==1.16.0
     # via python-dateutil
