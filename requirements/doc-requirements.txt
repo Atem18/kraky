@@ -133,7 +133,7 @@ typing-extensions==4.11.0
     # via typer
 urllib3==2.2.1
     # via requests
-watchdog==4.0.0
+watchdog==4.0.1
     # via mkdocs
 websockets==12.0
     # via kraky (pyproject.toml)
