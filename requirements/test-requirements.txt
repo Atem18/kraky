@@ -8,7 +8,7 @@ anyio==4.3.0
     # via httpcore
 cachetools==5.3.3
     # via tox
-certifi==2024.2.2
+certifi==2024.6.2
     # via
     #   httpcore
     #   httpx
