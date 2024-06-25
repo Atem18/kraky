@@ -80,7 +80,7 @@ pycparser==2.22
     # via cffi
 pygments==2.18.0
     # via rich
-pyperclip==1.8.2
+pyperclip==1.9.0
     # via hatch
 python-dotenv==1.0.1
     # via kraky (pyproject.toml)
