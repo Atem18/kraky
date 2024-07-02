@@ -103,7 +103,7 @@ trove-classifiers==2024.5.22
     # via hatchling
 typer==0.12.3
     # via kraky (pyproject.toml)
-typing-extensions==4.11.0
+typing-extensions==4.12.2
     # via typer
 userpath==1.9.2
     # via hatch

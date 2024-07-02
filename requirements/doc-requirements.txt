@@ -129,7 +129,7 @@ soupsieve==2.5
     # via beautifulsoup4
 typer==0.12.3
     # via kraky (pyproject.toml)
-typing-extensions==4.11.0
+typing-extensions==4.12.2
     # via typer
 urllib3==2.2.2
     # via requests
