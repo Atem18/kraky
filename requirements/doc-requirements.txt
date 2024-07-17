@@ -4,7 +4,7 @@
 #
 #    pip-compile --extra=doc --output-file=requirements/doc-requirements.txt pyproject.toml
 #
-anyio==4.3.0
+anyio==4.4.0
     # via httpcore
 babel==2.15.0
     # via mkdocs-material
