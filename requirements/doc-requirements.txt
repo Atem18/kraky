@@ -58,7 +58,7 @@ markdown==3.6
     #   mkdocs-material
     #   mkdocstrings
     #   pymdown-extensions
-markdown2==2.4.13
+markdown2==2.5.0
     # via readtime
 markupsafe==2.1.5
     # via
