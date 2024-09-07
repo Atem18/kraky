@@ -3,10 +3,10 @@ on: [pull_request]
 jobs:
   pytest:
     name: Run tests
-    runs-on: ubuntu-20.04
+    runs-on: ubuntu-22.04
     strategy:
       matrix:
-        python: ["3.8", "3.9", "3.10", "3.11", "3.12"]
+        python: ["3.9", "3.10", "3.11", "3.12"]
     steps:
       - name: Checkout
         uses: actions/checkout@v4
@@ -14,7 +14,11 @@ jobs:
         uses: actions/setup-python@v5
         with:
           python-version: ${{ matrix.python }}
+      - name: Install uv
+        uses: astral-sh/setup-uv@v1
+        with:
+          enable-cache: true
       - name: Install test dependencies
-        run: pip install -r requirements/test-requirements.txt
-      - name: Run Tox
-        run: tox -e py
+        run: uv pip install --system -r requirements/test-requirements.txt
+      - name: Run tox targets for ${{ matrix.python }}
+        run: uv run tox run -f py$(echo ${{ matrix.python }} | tr -d .)
