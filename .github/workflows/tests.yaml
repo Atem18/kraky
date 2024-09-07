@@ -21,4 +21,4 @@ jobs:
       - name: Install test dependencies
         run: uv pip install --system -r requirements/test-requirements.txt
       - name: Run tox targets for ${{ matrix.python-version }}
-        run: un run tox run -f py$(echo ${{ matrix.python-version }} | tr -d .)
+        run: uv run tox run -f py$(echo ${{ matrix.python-version }} | tr -d .)
