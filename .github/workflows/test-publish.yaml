@@ -21,7 +21,7 @@ jobs:
         with:
           enable-cache: true
       - name: Install build dependencies
-        run: uv pip install -r requirements/build-requirements.txt
+        run: uv pip install --system -r requirements/build-requirements.txt
       - name: Build package
         run: uv run hatch build
       - name: Publish distribution 📦 to Test PyPI
