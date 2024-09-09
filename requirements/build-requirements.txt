@@ -68,7 +68,7 @@ pathspec==0.12.1
     # via hatchling
 pexpect==4.9.0
     # via hatch
-platformdirs==4.2.2
+platformdirs==4.3.2
     # via
     #   hatch
     #   virtualenv
