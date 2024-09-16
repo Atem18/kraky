@@ -41,7 +41,7 @@ packaging==24.1
     #   pyproject-api
     #   pytest
     #   tox
-platformdirs==4.2.2
+platformdirs==4.3.3
     # via
     #   tox
     #   virtualenv
