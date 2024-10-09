@@ -25,7 +25,7 @@ jobs:
       - name: Build package
         run: uv run hatch build
       - name: Publish distribution 📦 to Test PyPI
-        uses: pypa/gh-action-pypi-publish@v1.10.2
+        uses: pypa/gh-action-pypi-publish@v1.10.3
         with:
           password: ${{ secrets.test_pypi_password }}
           repository-url: https://test.pypi.org/legacy/
