@@ -4,7 +4,7 @@
 #
 #    pip-compile --extra=dev --output-file=requirements/dev-requirements.txt pyproject.toml
 #
-anyio==4.4.0
+anyio==4.6.2.post1
     # via httpcore
 certifi==2024.8.30
     # via
