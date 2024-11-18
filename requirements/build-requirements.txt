@@ -39,7 +39,7 @@ httpx==0.27.2
     #   kraky (pyproject.toml)
 hyperlink==21.0.0
     # via hatch
-idna==3.7
+idna==3.10
     # via
     #   anyio
     #   httpx
