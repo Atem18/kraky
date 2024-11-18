@@ -101,7 +101,7 @@ tomlkit==0.13.0
     # via hatch
 trove-classifiers==2024.7.2
     # via hatchling
-typer==0.12.3
+typer==0.13.0
     # via kraky (pyproject.toml)
 typing-extensions==4.12.2
     # via typer
